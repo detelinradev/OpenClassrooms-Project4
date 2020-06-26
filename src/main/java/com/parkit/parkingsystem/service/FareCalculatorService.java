@@ -10,8 +10,8 @@ public class FareCalculatorService {
 			throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
 		}
 
-		long inMinute = ticket.getInTime().getTimeInMillis() / 1000 * 60;
-		long outMinute = ticket.getOutTime().getTimeInMillis() / 1000 * 60;
+		long inMinute = ticket.getInTime().getTimeInMillis() / (1000 * 60);
+		long outMinute = ticket.getOutTime().getTimeInMillis() / (1000 * 60);
 
 		// TODO: Some tests are failing here. Need to check if this logic is correct
 		long duration = outMinute - inMinute;
