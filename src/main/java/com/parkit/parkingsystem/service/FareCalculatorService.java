@@ -13,7 +13,6 @@ public class FareCalculatorService {
 		long inMinute = ticket.getInTime().getTimeInMillis() / (1000 * 60);
 		long outMinute = ticket.getOutTime().getTimeInMillis() / (1000 * 60);
 
-		// TODO: Some tests are failing here. Need to check if this logic is correct
 		long duration = outMinute - inMinute;
 
 		switch (ticket.getParkingSpot().getParkingType()) {
