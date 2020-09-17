@@ -21,13 +21,13 @@ public class ParkingService {
 
 	private static final Logger logger = LogManager.getLogger("ParkingService");
 
-	private static FareCalculatorService fareCalculatorService = new FareCalculatorService();
+	private static final FareCalculatorService fareCalculatorService = new FareCalculatorService();
 	private static final DateTimeFormatter dateTimeFormatter= DateTimeFormatter.ofPattern("HH:mm d.MMMM.yyyy");
 
-	private InputReaderUtil inputReaderUtil;
-	private ParkingSpotDAO parkingSpotDAO;
-	private TicketDAO ticketDAO;
-	private TimeUtil timeUtil;
+	private final InputReaderUtil inputReaderUtil;
+	private final ParkingSpotDAO parkingSpotDAO;
+	private final TicketDAO ticketDAO;
+	private final TimeUtil timeUtil;
 
 	public ParkingService(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO, TimeUtil timeUtil) {
 		this.inputReaderUtil = inputReaderUtil;
@@ -37,7 +37,6 @@ public class ParkingService {
 	}
 
 	public void processIncomingVehicle() {
-		try {
 			ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
 			if (parkingSpot != null && parkingSpot.getId() > 0) {
 				String vehicleRegNumber = getVehicleRegNumber();
@@ -53,19 +52,15 @@ public class ParkingService {
 				ticket.setVehicleRegNumber(vehicleRegNumber);
 				ticket.setInTime(inTime);
 				ticketDAO.saveTicket(ticket);
-				DateTimeFormatter dateTimeFormatter= DateTimeFormatter.ofPattern("HH:mm d.MMMM.yyyy");
 				System.out.println("Generated Ticket and saved in DB");
 				System.out.println("Please park your vehicle in spot number:" + parkingSpot.getId());
 				System.out
 						.println("Recorded in-time for vehicle number:" + vehicleRegNumber + " is: "
 								+ LocalDateTime.ofEpochSecond(inTime,0,ZoneOffset.UTC).format(dateTimeFormatter));
 			}
-		} catch (Exception e) {
-			logger.error("Unable to process incoming vehicle", e);
-		}
 	}
 
-	private String getVehicleRegNumber() throws Exception {
+	private String getVehicleRegNumber()  {
 		System.out.println("Please type the vehicle registration number and press enter key");
 		return inputReaderUtil.readVehicleRegistrationNumber();
 	}
@@ -103,7 +98,7 @@ public class ParkingService {
 		}
 		default: {
 			System.out.println("Incorrect input provided");
-			throw new IllegalArgumentException("Entered input is invalid");
+			return ParkingType.UNKNOWN;
 		}
 		}
 	}
