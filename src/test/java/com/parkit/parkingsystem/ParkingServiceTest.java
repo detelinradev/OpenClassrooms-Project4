@@ -55,14 +55,13 @@ public class ParkingServiceTest {
 	public void setUpPerTest() {
 		try {
 
-			ParkingSpot takenParkingSpot = new ParkingSpot(1, ParkingType.CAR, false);
 			parkingSpot = new ParkingSpot(1, ParkingType.CAR, true);
 			ticket = new Ticket();
 			inTime = timeUtil.getTimeInSeconds();
 			inTime -= 60 * 60;
 			ticket.setInTime(inTime);
 			ticket.setOutTime(-1L);
-			ticket.setParkingSpot(takenParkingSpot);
+			ticket.setParkingSpot(parkingSpot);
 			ticket.setVehicleRegNumber("ABCDEF");
 			ticket.setPrice(0);
 			ticket.setId(1);
@@ -216,12 +215,104 @@ public class ParkingServiceTest {
 
 		parkingService.processExitingVehicle();
 
+		verify(inputReaderUtil,times(1)).readVehicleRegistrationNumber();
 		verify(ticketDAO,times(1)).getTicket(any(String.class));
 		verify(ticketDAO,times(1)).updateTicket(any(Ticket.class));
 		verify(parkingSpotDAO,times(1)).updateParking(parkingSpot);
+		verify(fareCalculatorService,times(1)).calculateFare(ticket);
+
+		verifyNoMoreInteractions(ticketDAO,parkingSpotDAO,inputReaderUtil,fareCalculatorService);
+	}
+
+	@Test
+	public void processExitingVehicleTestWithReadVehicleRegNumberThrowsException()  {
+		when(inputReaderUtil.readVehicleRegistrationNumber()).thenThrow(IllegalArgumentException.class);
+
+		parkingService.processExitingVehicle();
+
 		verify(inputReaderUtil,times(1)).readVehicleRegistrationNumber();
 
 		verifyNoMoreInteractions(ticketDAO,parkingSpotDAO,inputReaderUtil);
+	}
+
+	@Test
+	public void processExitingVehicleTestWithNullTicket()  {
+		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+		when(ticketDAO.getTicket(anyString())).thenReturn(null);
+
+		parkingService.processExitingVehicle();
+
+		verify(inputReaderUtil,times(1)).readVehicleRegistrationNumber();
+		verify(ticketDAO,times(1)).getTicket(any(String.class));
+
+		verifyNoMoreInteractions(ticketDAO,parkingSpotDAO,inputReaderUtil);
+	}
+
+	@Test
+	public void processExitingVehicleTestWithFareCalculatorThrowsException()  {
+		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
+		doThrow(IllegalArgumentException.class).when(fareCalculatorService).calculateFare(ticket);
+
+		parkingService.processExitingVehicle();
+
+		verify(inputReaderUtil,times(1)).readVehicleRegistrationNumber();
+		verify(ticketDAO,times(1)).getTicket(any(String.class));
+		verify(fareCalculatorService,times(1)).calculateFare(ticket);
+
+		verifyNoMoreInteractions(ticketDAO,parkingSpotDAO,inputReaderUtil,fareCalculatorService);
+	}
+
+	@Test
+	public void processExitingVehicleTestWithUpdateTicketThrowsException()  {
+		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
+		when(ticketDAO.updateTicket(any(Ticket.class))).thenThrow(IllegalArgumentException.class);
+
+		parkingService.processExitingVehicle();
+
+		verify(inputReaderUtil,times(1)).readVehicleRegistrationNumber();
+		verify(ticketDAO,times(1)).getTicket(any(String.class));
+		verify(fareCalculatorService,times(1)).calculateFare(ticket);
+		verify(ticketDAO,times(1)).updateTicket(any(Ticket.class));
+
+		verifyNoMoreInteractions(ticketDAO,parkingSpotDAO,inputReaderUtil,fareCalculatorService);
+	}
+
+	@Test
+	public void processExitingVehicleTestWithUpdateParkingThrowsException()  {
+		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
+		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
+		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenThrow(IllegalArgumentException.class);
+
+		parkingService.processExitingVehicle();
+
+		verify(inputReaderUtil,times(1)).readVehicleRegistrationNumber();
+		verify(ticketDAO,times(1)).getTicket(any(String.class));
+		verify(fareCalculatorService,times(1)).calculateFare(ticket);
+		verify(ticketDAO,times(1)).updateTicket(any(Ticket.class));
+		verify(parkingSpotDAO,times(1)).updateParking(parkingSpot);
+
+		verifyNoMoreInteractions(ticketDAO,parkingSpotDAO,inputReaderUtil,fareCalculatorService);
+	}
+
+	@Test
+	public void processExitingVehicleTestWithUpdateParkingReturnsFalse()  {
+		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
+		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
+		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(false);
+
+		parkingService.processExitingVehicle();
+
+		verify(inputReaderUtil,times(1)).readVehicleRegistrationNumber();
+		verify(ticketDAO,times(1)).getTicket(any(String.class));
+		verify(fareCalculatorService,times(1)).calculateFare(ticket);
+		verify(ticketDAO,times(1)).updateTicket(any(Ticket.class));
+		verify(parkingSpotDAO,times(1)).updateParking(parkingSpot);
+
+		verifyNoMoreInteractions(ticketDAO,parkingSpotDAO,inputReaderUtil,fareCalculatorService);
 	}
 
 }

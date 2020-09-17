@@ -21,19 +21,21 @@ public class ParkingService {
 
     private static final Logger logger = LogManager.getLogger("ParkingService");
 
-    private static final FareCalculatorService fareCalculatorService = new FareCalculatorService();
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm d.MMMM.yyyy");
 
     private final InputReaderUtil inputReaderUtil;
     private final ParkingSpotDAO parkingSpotDAO;
     private final TicketDAO ticketDAO;
     private final TimeUtil timeUtil;
+    private final FareCalculatorService fareCalculatorService;
 
-    public ParkingService(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO, TimeUtil timeUtil) {
+    public ParkingService(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO, TimeUtil timeUtil,
+                          FareCalculatorService fareCalculatorService ) {
         this.inputReaderUtil = inputReaderUtil;
         this.parkingSpotDAO = parkingSpotDAO;
         this.ticketDAO = ticketDAO;
         this.timeUtil = timeUtil;
+        this.fareCalculatorService = fareCalculatorService;
     }
 
     public void processIncomingVehicle() {
@@ -133,21 +135,27 @@ public class ParkingService {
             String vehicleRegNumber = getVehicleRegNumber();
 
             Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
-            ticket.setOutTime(timeUtil.getTimeInSeconds());
+            if(ticket != null) {
+                ticket.setOutTime(timeUtil.getTimeInSeconds());
 
-            fareCalculatorService.calculateFare(ticket);
-            ticketDAO.updateTicket(ticket);
+                fareCalculatorService.calculateFare(ticket);
+                ticketDAO.updateTicket(ticket);
 
-            ParkingSpot parkingSpot = ticket.getParkingSpot();
-            parkingSpot.setAvailable(true);
+                ParkingSpot parkingSpot = ticket.getParkingSpot();
+                parkingSpot.setAvailable(true);
 
-            parkingSpotDAO.updateParking(parkingSpot);
+               if(parkingSpotDAO.updateParking(parkingSpot)) {
 
-            DecimalFormat df = new DecimalFormat("#.##");
+                   DecimalFormat df = new DecimalFormat("#.##");
 
-            System.out.println("Please pay the parking fare: " + df.format(ticket.getPrice()) + "€");
-            System.out.println("Recorded out-time for vehicle number: " + ticket.getVehicleRegNumber() + " is: "
-                    + LocalDateTime.ofEpochSecond(ticket.getOutTime(), 0, ZoneOffset.UTC).format(dateTimeFormatter));
+                   System.out.println("Please pay the parking fare: " + df.format(ticket.getPrice()) + "€");
+                   System.out.println("Recorded out-time for vehicle number: " + ticket.getVehicleRegNumber() + " is: "
+                           + LocalDateTime.ofEpochSecond(ticket.getOutTime(), 0, ZoneOffset.UTC)
+                           .format(dateTimeFormatter));
+
+               }else throw new IllegalArgumentException("Error updating parking");
+
+            }else throw new IllegalArgumentException("Error creating ticket");
 
         } catch (
                 Exception e) {
