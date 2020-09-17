@@ -38,10 +38,10 @@ public class TicketDAO {
 			return ps.execute();
 		} catch (Exception ex) {
 			logger.error("Error fetching next available slot", ex);
+			throw new IllegalArgumentException("Unable to create ticket");
 		} finally {
 			dataBaseConfig.closeConnection(con);
 		}
-		return false;
 	}
 
 	public Ticket getTicket(String vehicleRegNumber) {

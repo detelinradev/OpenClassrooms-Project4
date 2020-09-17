@@ -37,13 +37,13 @@ public class ParkingService {
 	}
 
 	public void processIncomingVehicle() {
+		try {
 			ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
 			if (parkingSpot != null && parkingSpot.getId() > 0) {
 				String vehicleRegNumber = getVehicleRegNumber();
 				parkingSpot.setAvailable(false);
-				parkingSpotDAO.updateParking(parkingSpot);// allot this parking space and mark it's availability as
-															// false
-
+                // allot this parking space and mark it's availability as false
+				parkingSpotDAO.updateParking(parkingSpot);
 				long inTime = timeUtil.getTimeInSeconds();
 				Ticket ticket = new Ticket();
 				// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
@@ -58,9 +58,12 @@ public class ParkingService {
 						.println("Recorded in-time for vehicle number:" + vehicleRegNumber + " is: "
 								+ LocalDateTime.ofEpochSecond(inTime,0,ZoneOffset.UTC).format(dateTimeFormatter));
 			}
+		} catch (Exception e) {
+			logger.error("Unable to process incoming vehicle", e);
+		}
 	}
 
-	private String getVehicleRegNumber()  {
+	private String getVehicleRegNumber(){
 		System.out.println("Please type the vehicle registration number and press enter key");
 		return inputReaderUtil.readVehicleRegistrationNumber();
 	}
@@ -74,7 +77,7 @@ public class ParkingService {
 			if (parkingNumber > 0) {
 				parkingSpot = new ParkingSpot(parkingNumber, parkingType, true);
 			} else {
-				throw new Exception("Error fetching parking number from DB. Parking slots might be full");
+				throw new IllegalArgumentException("Error fetching parking number from DB. Parking slots might be full");
 			}
 		} catch (IllegalArgumentException ie) {
 			logger.error("Error parsing user input for type of vehicle", ie);
@@ -98,7 +101,7 @@ public class ParkingService {
 		}
 		default: {
 			System.out.println("Incorrect input provided");
-			return ParkingType.UNKNOWN;
+			throw new IllegalArgumentException("Entered input is invalid");
 		}
 		}
 	}
