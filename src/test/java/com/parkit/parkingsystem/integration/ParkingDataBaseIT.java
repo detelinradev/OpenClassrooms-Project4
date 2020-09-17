@@ -2,6 +2,7 @@ package com.parkit.parkingsystem.integration;
 
 import static org.mockito.Mockito.when;
 
+import com.parkit.parkingsystem.util.TimeUtil;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,6 +25,7 @@ public class ParkingDataBaseIT {
 	private static ParkingSpotDAO parkingSpotDAO;
 	private static TicketDAO ticketDAO;
 	private static DataBasePrepareService dataBasePrepareService;
+	private static TimeUtil timeUtil;
 
 	@Mock
 	private static InputReaderUtil inputReaderUtil;
@@ -35,6 +37,7 @@ public class ParkingDataBaseIT {
 		ticketDAO = new TicketDAO();
 		ticketDAO.dataBaseConfig = dataBaseTestConfig;
 		dataBasePrepareService = new DataBasePrepareService();
+		timeUtil = new TimeUtil();
 	}
 
 	@BeforeEach
@@ -51,16 +54,16 @@ public class ParkingDataBaseIT {
 
 	@Test
 	public void testParkingACar() {
-		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO,timeUtil);
 		parkingService.processIncomingVehicle();
-		// TODO: check that a ticket is actualy saved in DB and Parking table is updated
+		// TODO: check that a ticket is actually saved in DB and Parking table is updated
 		// with availability
 	}
 
 	@Test
 	public void testParkingLotExit() {
 		testParkingACar();
-		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO);
+		ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO,timeUtil);
 		parkingService.processExitingVehicle();
 		// TODO: check that the fare generated and out time are populated correctly in
 		// the database

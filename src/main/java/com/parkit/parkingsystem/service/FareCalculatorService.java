@@ -6,12 +6,12 @@ import com.parkit.parkingsystem.model.Ticket;
 public class FareCalculatorService {
 
 	public void calculateFare(Ticket ticket) {
-		if ((ticket.getOutTime() == null) || (ticket.getOutTime().before(ticket.getInTime()))) {
-			throw new IllegalArgumentException("Out time provided is incorrect:" + ticket.getOutTime().toString());
+		if ((ticket.getOutTime() == -1L) || (ticket.getOutTime() < (ticket.getInTime()))) {
+			throw new IllegalArgumentException("Out time provided is incorrect. Stay duration is negative.");
 		}
 
-		long inMinute = ticket.getInTime().getTimeInMillis() / (1000 * 60);
-		long outMinute = ticket.getOutTime().getTimeInMillis() / (1000 * 60);
+		long inMinute = ticket.getInTime() / (60);
+		long outMinute = ticket.getOutTime()/ (60);
 
 		long duration = outMinute - inMinute;
 
@@ -25,7 +25,7 @@ public class FareCalculatorService {
 			break;
 		}
 		default:
-			throw new IllegalArgumentException("Unkown Parking Type");
+			throw new IllegalArgumentException("Unknown Parking Type");
 		}
 	}
 }

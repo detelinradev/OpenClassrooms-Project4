@@ -6,9 +6,9 @@ public class Ticket {
 	private int id;
 	private ParkingSpot parkingSpot;
 	private String vehicleRegNumber;
-	private double price;
-	private Calendar inTime;
-	private Calendar outTime;
+	private double price = 0.0;
+	private long inTime;
+	private long outTime = -1L;
 
 	public int getId() {
 		return id;
@@ -43,19 +43,31 @@ public class Ticket {
 
 	}
 
-	public Calendar getInTime() {
+	public long getInTime() {
 		return inTime;
 	}
 
-	public void setInTime(Calendar inTime) {
+	public void setInTime(long inTime) {
 		this.inTime = inTime;
 	}
 
-	public Calendar getOutTime() {
+	public long getOutTime() {
 		return outTime;
 	}
 
-	public void setOutTime(Calendar outTime) {
+	public void setOutTime(long outTime) {
 		this.outTime = outTime;
+	}
+
+	@Override
+	public String toString() {
+		return "Ticket{" +
+				"id=" + id +
+				", parkingSpot=" + parkingSpot +
+				", vehicleRegNumber='" + vehicleRegNumber + '\'' +
+				", price=" + price +
+				", inTime=" + inTime +
+				", outTime=" + outTime +
+				'}';
 	}
 }
