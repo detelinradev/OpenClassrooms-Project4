@@ -90,9 +90,9 @@ public class TicketDAO {
 			return true;
 		} catch (Exception ex) {
 			logger.error("Error saving ticket info", ex);
+			throw new IllegalArgumentException("Unable to update ticket information. Error occurred");
 		} finally {
 			dataBaseConfig.closeConnection(con);
 		}
-		return false;
 	}
 }
