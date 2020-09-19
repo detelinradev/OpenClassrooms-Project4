@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.Calendar;
 
+import com.parkit.parkingsystem.util.TimeUtil;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,20 +19,24 @@ import com.parkit.parkingsystem.service.FareCalculatorService;
 public class FareCalculatorServiceTest {
 
     private static FareCalculatorService fareCalculatorService;
+    private static TimeUtil timeUtil;
     private Ticket ticket;
     private long inTime;
     private long outTime;
 
     @BeforeAll
     private static void setUp() {
+
         fareCalculatorService = new FareCalculatorService();
+        timeUtil = new TimeUtil();
+
     }
 
     @BeforeEach
     private void setUpPerTest() {
         ticket = new Ticket();
-        inTime = Calendar.getInstance().getTimeInMillis();
-        outTime = Calendar.getInstance().getTimeInMillis();
+        inTime = timeUtil.getTimeInSeconds();
+        outTime =  timeUtil.getTimeInSeconds();
     }
 
     @Test

@@ -185,9 +185,17 @@ public class ParkingServiceTest {
 	}
 
 	@Test
-	public void getNextParkingNumberIfAvailableTest(){
+	public void getNextParkingNumberIfAvailableTestWithCarAsType(){
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(1);
+
+		Assertions.assertEquals(parkingSpot, parkingService.getNextParkingNumberIfAvailable());
+	}
+
+	@Test
+	public void getNextParkingNumberIfAvailableTestWithBikeAsType(){
+		when(inputReaderUtil.readSelection()).thenReturn(2);
+		when(parkingSpotDAO.getNextAvailableSlot(ParkingType.BIKE)).thenReturn(1);
 
 		Assertions.assertEquals(parkingSpot, parkingService.getNextParkingNumberIfAvailable());
 	}
