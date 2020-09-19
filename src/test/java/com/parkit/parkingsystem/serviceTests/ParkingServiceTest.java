@@ -1,4 +1,4 @@
-package com.parkit.parkingsystem;
+package com.parkit.parkingsystem.serviceTests;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -73,20 +72,23 @@ public class ParkingServiceTest {
 	}
 	@Test
 	public void processIncomingVehicleTest(){
+
+		//arrange
 		doReturn(parkingSpot).when(parkingService).getNextParkingNumberIfAvailable();
 		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
 		when(parkingSpotDAO.updateParking(parkingSpot)).thenReturn(true);
 		when(ticketDAO.saveTicket(any(Ticket.class))).thenReturn(true);
 		when(timeUtil.getTimeInSeconds()).thenReturn(inTime);
 
+		//act
 		parkingService.processIncomingVehicle();
 
+		//assert
 		verify(parkingService,times(1)).getNextParkingNumberIfAvailable();
 		verify(parkingService,times(1)).processIncomingVehicle();
 		verify(parkingSpotDAO,times(1)).updateParking(parkingSpot);
 		verify(ticketDAO,times(1)).saveTicket(any(Ticket.class));
 		verify(inputReaderUtil,times(1)).readVehicleRegistrationNumber();
-
 		verifyNoMoreInteractions(parkingService,ticketDAO,parkingSpotDAO,inputReaderUtil);
 
 	}
@@ -100,7 +102,6 @@ public class ParkingServiceTest {
 
 		verify(parkingService,times(1)).getNextParkingNumberIfAvailable();
 		verify(parkingService,times(1)).processIncomingVehicle();
-
 		verifyNoMoreInteractions(parkingService,ticketDAO,parkingSpotDAO,inputReaderUtil);
 	}
 
@@ -188,7 +189,7 @@ public class ParkingServiceTest {
 		when(inputReaderUtil.readSelection()).thenReturn(1);
 		when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(1);
 
-		Assertions.assertEquals(parkingSpot,parkingService.getNextParkingNumberIfAvailable());
+		Assertions.assertEquals(parkingSpot, parkingService.getNextParkingNumberIfAvailable());
 	}
 
 	@Test
@@ -314,5 +315,4 @@ public class ParkingServiceTest {
 
 		verifyNoMoreInteractions(ticketDAO,parkingSpotDAO,inputReaderUtil,fareCalculatorService);
 	}
-
 }

@@ -4,7 +4,6 @@ import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 
 import com.parkit.parkingsystem.util.TimeUtil;
 import org.apache.logging.log4j.LogManager;

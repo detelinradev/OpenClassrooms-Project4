@@ -1,4 +1,4 @@
-package com.parkit.parkingsystem;
+package com.parkit.parkingsystem.serviceTests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
