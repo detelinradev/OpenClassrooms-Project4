@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -32,7 +34,7 @@ public class TicketDAO {
 			ps.setInt(1, ticket.getParkingSpot().getId());
 			ps.setString(2, ticket.getVehicleRegNumber());
 			ps.setDouble(3, ticket.getPrice());
-			ps.setTimestamp(4, new Timestamp(ticket.getInTime()));
+			ps.setTimestamp(4, new Timestamp(ticket.getInTime()*1000));
 			ps.setTimestamp(5,
 					(ticket.getOutTime() == -1L) ? null : (new Timestamp(ticket.getOutTime())));
 			return ps.execute();
@@ -55,18 +57,16 @@ public class TicketDAO {
 			ResultSet rs = ps.executeQuery();
 			if (rs.next()) {
 				ticket = new Ticket();
-				Calendar calendarIn = Calendar.getInstance();
-				calendarIn.setTime(rs.getTimestamp(4));
-				Calendar calendarOut = Calendar.getInstance();
-				calendarOut.setTime(
-						rs.getTimestamp(5) == null ? new Date(System.currentTimeMillis()) : rs.getTimestamp(5));
-				ParkingSpot parkingSpot = new ParkingSpot(rs.getInt(1), ParkingType.valueOf(rs.getString(6)), false);
+				ParkingSpot parkingSpot = new ParkingSpot(rs.getInt(1),
+						ParkingType.valueOf(rs.getString(6)), false);
 				ticket.setParkingSpot(parkingSpot);
 				ticket.setId(rs.getInt(2));
 				ticket.setVehicleRegNumber(vehicleRegNumber);
 				ticket.setPrice(rs.getDouble(3));
-				ticket.setInTime(calendarIn.getTimeInMillis());
-				ticket.setOutTime(calendarOut.getTimeInMillis());
+				ticket.setInTime(rs.getTimestamp(4).getTime()/1000);
+				ticket.setOutTime(rs.getTimestamp(5) == null
+						? LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
+						: rs.getTimestamp(5).getTime()/1000);
 			}
 			dataBaseConfig.closeResultSet(rs);
 			dataBaseConfig.closePreparedStatement(ps);

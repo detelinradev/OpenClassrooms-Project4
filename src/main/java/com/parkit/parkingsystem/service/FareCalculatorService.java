@@ -7,13 +7,12 @@ public class FareCalculatorService {
 
 	public void calculateFare(Ticket ticket) {
 		if ((ticket.getOutTime() == -1L) || (ticket.getOutTime() < (ticket.getInTime()))) {
-			throw new IllegalArgumentException("Out time provided is incorrect. Stay duration is negative.");
+			throw new IllegalArgumentException("Out time provided is incorrect - " + ticket.getOutTime() + " " +ticket.getInTime());
 		}
 
-		long inMinute = ticket.getInTime() / (60);
-		long outMinute = ticket.getOutTime()/ (60);
-
-		long duration = outMinute - inMinute;
+		long inMinute = ticket.getInTime();
+		long outMinute = ticket.getOutTime();
+		long duration = (outMinute - inMinute)/60;
 
 		switch (ticket.getParkingSpot().getParkingType()) {
 		case CAR: {
