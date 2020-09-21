@@ -3,7 +3,6 @@ package com.parkit.parkingsystem.integration;
 import static org.mockito.Mockito.when;
 
 import com.parkit.parkingsystem.constants.ParkingType;
-import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorService;
 import com.parkit.parkingsystem.util.TimeUtil;
 import org.junit.jupiter.api.*;
@@ -18,7 +17,6 @@ import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
 import com.parkit.parkingsystem.service.ParkingService;
 import com.parkit.parkingsystem.util.InputReaderUtil;
 
-import java.sql.Time;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 

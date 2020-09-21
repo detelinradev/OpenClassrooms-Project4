@@ -1,9 +1,6 @@
 package com.parkit.parkingsystem.dao;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Calendar;
@@ -25,10 +22,10 @@ public class TicketDAO {
 	public DataBaseConfig dataBaseConfig = new DataBaseConfig();
 
 	public boolean saveTicket(Ticket ticket) {
-		Connection con = null;
-		try {
-			con = dataBaseConfig.getConnection();
-			PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET);
+
+		try(Connection con = dataBaseConfig.getConnection();
+		PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET)) {
+
 			// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
 			// ps.setInt(1,ticket.getId());
 			ps.setInt(1, ticket.getParkingSpot().getId());
@@ -38,11 +35,9 @@ public class TicketDAO {
 			ps.setTimestamp(5,
 					(ticket.getOutTime() == -1L) ? null : (new Timestamp(ticket.getOutTime())));
 			return ps.execute();
-		} catch (Exception ex) {
+		} catch (ClassNotFoundException | SQLException ex) {
 			logger.error("Error fetching next available slot", ex);
 			throw new IllegalArgumentException("Unable to create ticket");
-		} finally {
-			dataBaseConfig.closeConnection(con);
 		}
 	}
 
