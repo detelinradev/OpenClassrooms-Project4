@@ -24,6 +24,7 @@ public class TicketDAO {
 	public boolean saveTicket(Ticket ticket) {
 
 		try(Connection con = dataBaseConfig.getConnection();
+
 		PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET)) {
 
 			// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
@@ -34,26 +35,34 @@ public class TicketDAO {
 			ps.setTimestamp(4, new Timestamp(ticket.getInTime()*1000));
 			ps.setTimestamp(5,
 					(ticket.getOutTime() == -1L) ? null : (new Timestamp(ticket.getOutTime())));
+
 			return ps.execute();
+
 		} catch (ClassNotFoundException | SQLException ex) {
-			logger.error("Error fetching next available slot", ex);
+
+			logger.error("Error saving ticket info", ex);
 			throw new IllegalArgumentException("Unable to create ticket");
 		}
 	}
 
 	public Ticket getTicket(String vehicleRegNumber) {
-		Connection con = null;
+
 		Ticket ticket = null;
-		try {
-			con = dataBaseConfig.getConnection();
-			PreparedStatement ps = con.prepareStatement(DBConstants.GET_TICKET);
+		ResultSet rs = null;
+
+		try(Connection con = dataBaseConfig.getConnection();
+		PreparedStatement ps = con.prepareStatement(DBConstants.GET_TICKET)) {
+
 			// ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
 			ps.setString(1, vehicleRegNumber);
-			ResultSet rs = ps.executeQuery();
+			rs = ps.executeQuery();
+
 			if (rs.next()) {
+
 				ticket = new Ticket();
 				ParkingSpot parkingSpot = new ParkingSpot(rs.getInt(1),
 						ParkingType.valueOf(rs.getString(6)), false);
+
 				ticket.setParkingSpot(parkingSpot);
 				ticket.setId(rs.getInt(2));
 				ticket.setVehicleRegNumber(vehicleRegNumber);
@@ -63,31 +72,34 @@ public class TicketDAO {
 						? LocalDateTime.now().toEpochSecond(ZoneOffset.UTC)
 						: rs.getTimestamp(5).getTime()/1000);
 			}
-			dataBaseConfig.closeResultSet(rs);
-			dataBaseConfig.closePreparedStatement(ps);
-		} catch (Exception ex) {
-			logger.error("Error fetching next available slot", ex);
+		} catch (ClassNotFoundException | SQLException ex) {
+
+			logger.error("Error getting ticket info", ex);
+			throw new IllegalArgumentException("Unable to get ticket");
+
 		} finally {
-			dataBaseConfig.closeConnection(con);
+
+			dataBaseConfig.closeResultSet(rs);
 		}
 		return ticket;
 	}
 
 	public boolean updateTicket(Ticket ticket) {
-		Connection con = null;
-		try {
-			con = dataBaseConfig.getConnection();
+
+		try(Connection con = dataBaseConfig.getConnection()) {
+
 			PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TICKET);
+
 			ps.setDouble(1, ticket.getPrice());
 			ps.setTimestamp(2, new Timestamp(ticket.getOutTime()));
 			ps.setInt(3, ticket.getId());
-			ps.execute();
-			return true;
-		} catch (Exception ex) {
-			logger.error("Error saving ticket info", ex);
-			throw new IllegalArgumentException("Unable to update ticket information. Error occurred");
-		} finally {
-			dataBaseConfig.closeConnection(con);
+
+			return ps.execute();
+
+		} catch (ClassNotFoundException | SQLException ex) {
+
+			logger.error("Error updating ticket info", ex);
+			throw new IllegalArgumentException("Unable to update ticket information");
 		}
 	}
 }
