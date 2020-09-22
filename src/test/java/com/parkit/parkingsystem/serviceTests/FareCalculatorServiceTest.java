@@ -29,8 +29,8 @@ public class FareCalculatorServiceTest {
     private static void setUp() {
 
         fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.NO_DISCOUNT)
-                .withDiscountType(DiscountType.FREE_30_MIN)
-                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+//                .withDiscountType(DiscountType.FREE_30_MIN)
+//                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
                 .build();
         timeUtil = new TimeUtilImpl();
 

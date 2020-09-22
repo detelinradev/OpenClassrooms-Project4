@@ -25,8 +25,8 @@ public class InteractiveShellImpl implements InteractiveShell {
     private final TicketDAO ticketDAO = new TicketDAOImpl(new DataBaseConfigImpl());
     private final TimeUtil timeUtil = new TimeUtilImpl();
     private final FareCalculatorService fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.NO_DISCOUNT)
-            .withDiscountType(DiscountType.FREE_30_MIN)
-            .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+//            .withDiscountType(DiscountType.FREE_30_MIN)
+//            .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
             .build();
     private ParkingService parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil,
             fareCalculatorService);
