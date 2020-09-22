@@ -1,6 +1,7 @@
 package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.config.DataBaseConfigImpl;
+import com.parkit.parkingsystem.constants.DiscountType;
 import com.parkit.parkingsystem.dao.TicketDAOImpl;
 import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.ParkingSpotDAOImpl;
@@ -23,7 +24,10 @@ public class InteractiveShellImpl implements InteractiveShell {
     private final ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAOImpl(new DataBaseConfigImpl());
     private final TicketDAO ticketDAO = new TicketDAOImpl(new DataBaseConfigImpl());
     private final TimeUtil timeUtil = new TimeUtilImpl();
-    private final FareCalculatorService fareCalculatorService = new FareCalculatorServiceImpl();
+    private final FareCalculatorService fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.NO_DISCOUNT)
+            .withDiscountType(DiscountType.FREE_30_MIN)
+            .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+            .build();
     private ParkingService parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil,
             fareCalculatorService);
 

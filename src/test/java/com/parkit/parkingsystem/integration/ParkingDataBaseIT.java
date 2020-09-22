@@ -2,6 +2,7 @@ package com.parkit.parkingsystem.integration;
 
 import static org.mockito.Mockito.when;
 
+import com.parkit.parkingsystem.constants.DiscountType;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAOImpl;
 import com.parkit.parkingsystem.dao.TicketDAOImpl;
@@ -44,7 +45,10 @@ public class ParkingDataBaseIT {
         parkingSpotDAO = new ParkingSpotDAOImpl(dataBaseTestConfig);
         ticketDAO = new TicketDAOImpl(dataBaseTestConfig);
         dataBasePrepareService = new DataBasePrepareService();
-        fareCalculatorService = new FareCalculatorServiceImpl();
+        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.NO_DISCOUNT)
+                .withDiscountType(DiscountType.FREE_30_MIN)
+                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .build();
     }
 
 

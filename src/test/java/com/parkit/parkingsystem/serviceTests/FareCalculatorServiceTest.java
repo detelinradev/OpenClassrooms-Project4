@@ -3,6 +3,7 @@ package com.parkit.parkingsystem.serviceTests;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.parkit.parkingsystem.constants.DiscountType;
 import com.parkit.parkingsystem.service.FareCalculatorServiceImpl;
 import com.parkit.parkingsystem.util.TimeUtilImpl;
 import com.parkit.parkingsystem.util.contracts.TimeUtil;
@@ -27,7 +28,10 @@ public class FareCalculatorServiceTest {
     @BeforeAll
     private static void setUp() {
 
-        fareCalculatorService = new FareCalculatorServiceImpl();
+        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.NO_DISCOUNT)
+                .withDiscountType(DiscountType.FREE_30_MIN)
+                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .build();
         timeUtil = new TimeUtilImpl();
 
     }
