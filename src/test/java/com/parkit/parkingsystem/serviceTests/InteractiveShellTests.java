@@ -1,8 +1,9 @@
 package com.parkit.parkingsystem.serviceTests;
 
-import com.parkit.parkingsystem.service.InteractiveShell;
-import com.parkit.parkingsystem.service.ParkingService;
-import com.parkit.parkingsystem.util.InputReaderUtil;
+import com.parkit.parkingsystem.service.InteractiveShellImpl;
+import com.parkit.parkingsystem.service.contracts.InteractiveShell;
+import com.parkit.parkingsystem.service.contracts.ParkingService;
+import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +23,7 @@ public class InteractiveShellTests {
     private ParkingService parkingService;
 
     @InjectMocks
-    private InteractiveShell interactiveShell;
+    private InteractiveShellImpl interactiveShell;
 
     @Test
     public void load_Interface_Should_LoadInterface_When_IncomingVehicleSelected() {

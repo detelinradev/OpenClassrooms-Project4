@@ -1,22 +1,23 @@
 package com.parkit.parkingsystem.service;
 
+import com.parkit.parkingsystem.constants.ParkingType;
+import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
+import com.parkit.parkingsystem.dao.contracts.TicketDAO;
+import com.parkit.parkingsystem.model.ParkingSpot;
+import com.parkit.parkingsystem.model.Ticket;
+import com.parkit.parkingsystem.service.contracts.FareCalculatorService;
+import com.parkit.parkingsystem.service.contracts.ParkingService;
+import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
+import com.parkit.parkingsystem.util.contracts.TimeUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
-import com.parkit.parkingsystem.util.TimeUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import com.parkit.parkingsystem.constants.ParkingType;
-import com.parkit.parkingsystem.dao.ParkingSpotDAO;
-import com.parkit.parkingsystem.dao.TicketDAO;
-import com.parkit.parkingsystem.model.ParkingSpot;
-import com.parkit.parkingsystem.model.Ticket;
-import com.parkit.parkingsystem.util.InputReaderUtil;
-
-public class ParkingService {
+public class ParkingServiceImpl implements ParkingService {
 
     private static final Logger logger = LogManager.getLogger("ParkingService");
 
@@ -28,7 +29,7 @@ public class ParkingService {
     private final TimeUtil timeUtil;
     private final FareCalculatorService fareCalculatorService;
 
-    public ParkingService(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO, TimeUtil timeUtil,
+    public ParkingServiceImpl(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO, TimeUtil timeUtil,
                           FareCalculatorService fareCalculatorService ) {
         this.inputReaderUtil = inputReaderUtil;
         this.parkingSpotDAO = parkingSpotDAO;
@@ -143,16 +144,16 @@ public class ParkingService {
                 ParkingSpot parkingSpot = ticket.getParkingSpot();
                 parkingSpot.setAvailable(true);
 
-               if(parkingSpotDAO.updateParking(parkingSpot)) {
+                if(parkingSpotDAO.updateParking(parkingSpot)) {
 
-                   DecimalFormat df = new DecimalFormat("#.##");
+                    DecimalFormat df = new DecimalFormat("#.##");
 
-                   System.out.println("Please pay the parking fare: " + df.format(ticket.getPrice()) + "€");
-                   System.out.println("Recorded out-time for vehicle number: " + ticket.getVehicleRegNumber() + " is: "
-                           + LocalDateTime.ofEpochSecond(ticket.getOutTime(), 0, ZoneOffset.UTC)
-                           .format(dateTimeFormatter));
+                    System.out.println("Please pay the parking fare: " + df.format(ticket.getPrice()) + "€");
+                    System.out.println("Recorded out-time for vehicle number: " + ticket.getVehicleRegNumber() + " is: "
+                            + LocalDateTime.ofEpochSecond(ticket.getOutTime(), 0, ZoneOffset.UTC)
+                            .format(dateTimeFormatter));
 
-               }else throw new IllegalArgumentException("Error updating parking");
+                }else throw new IllegalArgumentException("Error updating parking");
 
             }else throw new IllegalArgumentException("Error creating ticket");
 

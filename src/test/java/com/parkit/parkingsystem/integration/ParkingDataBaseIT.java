@@ -3,19 +3,23 @@ package com.parkit.parkingsystem.integration;
 import static org.mockito.Mockito.when;
 
 import com.parkit.parkingsystem.constants.ParkingType;
-import com.parkit.parkingsystem.service.FareCalculatorService;
-import com.parkit.parkingsystem.util.TimeUtil;
+import com.parkit.parkingsystem.dao.ParkingSpotDAOImpl;
+import com.parkit.parkingsystem.dao.TicketDAOImpl;
+import com.parkit.parkingsystem.service.FareCalculatorServiceImpl;
+import com.parkit.parkingsystem.service.contracts.FareCalculatorService;
+import com.parkit.parkingsystem.service.ParkingServiceImpl;
+import com.parkit.parkingsystem.util.contracts.TimeUtil;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.parkit.parkingsystem.dao.ParkingSpotDAO;
-import com.parkit.parkingsystem.dao.TicketDAO;
+import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
+import com.parkit.parkingsystem.dao.contracts.TicketDAO;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.integration.service.DataBasePrepareService;
-import com.parkit.parkingsystem.service.ParkingService;
-import com.parkit.parkingsystem.util.InputReaderUtil;
+import com.parkit.parkingsystem.service.contracts.ParkingService;
+import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -37,12 +41,10 @@ public class ParkingDataBaseIT {
 
     @BeforeAll
     private static void setUp() {
-        parkingSpotDAO = new ParkingSpotDAO();
-        parkingSpotDAO.dataBaseConfig = dataBaseTestConfig;
-        ticketDAO = new TicketDAO();
-        ticketDAO.dataBaseConfig = dataBaseTestConfig;
+        parkingSpotDAO = new ParkingSpotDAOImpl(dataBaseTestConfig);
+        ticketDAO = new TicketDAOImpl(dataBaseTestConfig);
         dataBasePrepareService = new DataBasePrepareService();
-        fareCalculatorService = new FareCalculatorService();
+        fareCalculatorService = new FareCalculatorServiceImpl();
     }
 
 
@@ -68,7 +70,7 @@ public class ParkingDataBaseIT {
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(inputReaderUtil.readSelection()).thenReturn(1);
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) -300);
-        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
+        ParkingService parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
 
         //act
@@ -85,7 +87,7 @@ public class ParkingDataBaseIT {
 
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
+        ParkingService parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
         parkingACar_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
@@ -105,7 +107,7 @@ public class ParkingDataBaseIT {
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(inputReaderUtil.readSelection()).thenReturn(2);
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) -300);
-        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
+        ParkingService parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
 
         //act
@@ -122,7 +124,7 @@ public class ParkingDataBaseIT {
 
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
+        ParkingService parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
         parkingABike_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
@@ -140,7 +142,7 @@ public class ParkingDataBaseIT {
 
         //arrange
         when(inputReaderUtil.readSelection()).thenReturn(3);
-        ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
+        ParkingService parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
 
         //act

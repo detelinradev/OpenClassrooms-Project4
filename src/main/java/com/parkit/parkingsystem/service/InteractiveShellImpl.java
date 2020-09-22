@@ -1,22 +1,30 @@
 package com.parkit.parkingsystem.service;
 
-import com.parkit.parkingsystem.dao.ParkingSpotDAO;
-import com.parkit.parkingsystem.dao.TicketDAO;
-import com.parkit.parkingsystem.util.InputReaderUtil;
-import com.parkit.parkingsystem.util.TimeUtil;
+import com.parkit.parkingsystem.config.DataBaseConfigImpl;
+import com.parkit.parkingsystem.dao.TicketDAOImpl;
+import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
+import com.parkit.parkingsystem.dao.ParkingSpotDAOImpl;
+import com.parkit.parkingsystem.dao.contracts.TicketDAO;
+import com.parkit.parkingsystem.service.contracts.InteractiveShell;
+import com.parkit.parkingsystem.service.contracts.FareCalculatorService;
+import com.parkit.parkingsystem.service.contracts.ParkingService;
+import com.parkit.parkingsystem.util.InputReaderUtilImpl;
+import com.parkit.parkingsystem.util.TimeUtilImpl;
+import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
+import com.parkit.parkingsystem.util.contracts.TimeUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class InteractiveShell {
+public class InteractiveShellImpl implements InteractiveShell {
 
     private static final Logger logger = LogManager.getLogger("InteractiveShell");
 
-    private InputReaderUtil inputReaderUtil = new InputReaderUtil();
-    private final ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAO();
-    private final TicketDAO ticketDAO = new TicketDAO();
-    private final TimeUtil timeUtil = new TimeUtil();
-    private final FareCalculatorService fareCalculatorService = new FareCalculatorService();
-    private ParkingService parkingService = new ParkingService(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil,
+    private InputReaderUtil inputReaderUtil = new InputReaderUtilImpl();
+    private final ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAOImpl(new DataBaseConfigImpl());
+    private final TicketDAO ticketDAO = new TicketDAOImpl(new DataBaseConfigImpl());
+    private final TimeUtil timeUtil = new TimeUtilImpl();
+    private final FareCalculatorService fareCalculatorService = new FareCalculatorServiceImpl();
+    private ParkingService parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil,
             fareCalculatorService);
 
     public void loadInterface() {
@@ -55,5 +63,4 @@ public class InteractiveShell {
         System.out.println("2 Vehicle Exiting - Generate Ticket Price");
         System.out.println("3 Shutdown System");
     }
-
 }

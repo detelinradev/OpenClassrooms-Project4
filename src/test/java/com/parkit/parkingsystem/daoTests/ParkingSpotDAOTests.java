@@ -1,9 +1,10 @@
 package com.parkit.parkingsystem.daoTests;
 
-import com.parkit.parkingsystem.config.DataBaseConfig;
+import com.parkit.parkingsystem.config.contracts.DataBaseConfig;
 import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
-import com.parkit.parkingsystem.dao.ParkingSpotDAO;
+import com.parkit.parkingsystem.dao.ParkingSpotDAOImpl;
+import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import org.junit.jupiter.api.*;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.*;
 public class ParkingSpotDAOTests {
 
     @InjectMocks
-    private ParkingSpotDAO parkingSpotDAO;
+    private ParkingSpotDAOImpl parkingSpotDAO;
 
     @Mock
     private DataBaseConfig dataBaseConfig;
