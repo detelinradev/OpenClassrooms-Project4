@@ -22,7 +22,6 @@ import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.contracts.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
-import com.parkit.parkingsystem.service.contracts.ParkingService;
 import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
 
 @ExtendWith(MockitoExtension.class)
