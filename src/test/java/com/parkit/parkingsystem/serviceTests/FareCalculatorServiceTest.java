@@ -17,7 +17,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
 public class FareCalculatorServiceTest {
@@ -37,6 +39,7 @@ public class FareCalculatorServiceTest {
     private ParkingType parkingType;
 
     private List<DiscountType> discounts;
+    private Set<String> recurringUsers;
 
     @Mock
     private DiscountType discountType;
@@ -46,6 +49,7 @@ public class FareCalculatorServiceTest {
 
         discounts = new ArrayList<>();
         discounts.add(discountType);
+        recurringUsers = new HashSet<>();
     }
 
     @Test
@@ -54,23 +58,25 @@ public class FareCalculatorServiceTest {
         //arrange
         when(ticket.getInTime()).thenReturn(3600L);
         when(ticket.getOutTime()).thenReturn(7200L);
+        when(ticket.getVehicleRegNumber()).thenReturn("abc");
         when(ticket.getParkingSpot()).thenReturn(parkingSpot);
         when(parkingSpot.getParkingType()).thenReturn(parkingType);
         when(parkingType.getFare()).thenReturn(1.0);
-        when(discountType.calculatePrice(0.0,60L, 1.0)).thenReturn(1.0);
+        when(discountType.calculatePrice(0.0,60L, 1.0,false)).thenReturn(1.0);
         doNothing().when(ticket).setPrice(1.0);
 
         //act
-        fareCalculatorService.calculateFare(ticket,discounts);
+        fareCalculatorService.calculateFare(ticket,discounts,recurringUsers);
 
         //assert
         verify(ticket, times(2)).getInTime();
         verify(ticket, times(3)).getOutTime();
         verify(ticket, times(1)).getParkingSpot();
+        verify(ticket, times(2)).getVehicleRegNumber();
         verify(ticket, times(1)).setPrice(1.0);
         verify(parkingSpot, times(1)).getParkingType();
         verify(parkingType, times(1)).getFare();
-        verify(discountType, times(1)).calculatePrice(0.0,60L, 1.0);
+        verify(discountType, times(1)).calculatePrice(0.0,60L, 1.0,false);
         verifyNoMoreInteractions(ticket,parkingSpot,parkingType, discountType);
 
     }
@@ -82,20 +88,22 @@ public class FareCalculatorServiceTest {
         when(ticket.getInTime()).thenReturn(3600L);
         when(ticket.getOutTime()).thenReturn(7200L);
         when(ticket.getParkingSpot()).thenReturn(parkingSpot);
+        when(ticket.getVehicleRegNumber()).thenReturn("abc");
         when(parkingSpot.getParkingType()).thenReturn(parkingType);
         when(parkingType.getFare()).thenReturn(1.0);
-        when(discountType.calculatePrice(0.0,60L, 1.0)).thenReturn(0.0);
+        when(discountType.calculatePrice(0.0,60L, 1.0,false)).thenReturn(0.0);
 
         //act
-        fareCalculatorService.calculateFare(ticket,discounts);
+        fareCalculatorService.calculateFare(ticket,discounts,recurringUsers);
 
         //assert
         verify(ticket, times(2)).getInTime();
         verify(ticket, times(3)).getOutTime();
         verify(ticket, times(1)).getParkingSpot();
+        verify(ticket, times(1)).getVehicleRegNumber();
         verify(parkingSpot, times(1)).getParkingType();
         verify(parkingType, times(1)).getFare();
-        verify(discountType, times(1)).calculatePrice(0.0,60L, 1.0);
+        verify(discountType, times(1)).calculatePrice(0.0,60L, 1.0,false);
         verifyNoMoreInteractions(ticket,parkingSpot,parkingType, discountType);
 
     }
@@ -108,7 +116,7 @@ public class FareCalculatorServiceTest {
         when(ticket.getOutTime()).thenReturn(7200L);
 
         //act & assert
-        assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket,discounts));
+        assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket,discounts,recurringUsers));
     }
 
     @Test
@@ -119,7 +127,7 @@ public class FareCalculatorServiceTest {
         when(ticket.getOutTime()).thenReturn(-1L);
 
         //act & assert
-        assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket,discounts));
+        assertThrows(IllegalArgumentException.class, () -> fareCalculatorService.calculateFare(ticket,discounts,recurringUsers));
     }
 
 }
