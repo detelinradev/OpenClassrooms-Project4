@@ -9,27 +9,25 @@ import java.util.List;
 
 public class FareCalculatorServiceImpl implements FareCalculatorService {
 
-    private static final List<DiscountType> discounts = new ArrayList<>();
+    public List<DiscountType> discounts;
 
     private FareCalculatorServiceImpl(Builder builder) {
 
-        DiscountType discountType = builder.discountType;
+        this.discounts = new ArrayList<>(builder.getDiscounts()) ;
     }
 
     public static class Builder {
 
-        private DiscountType discountType;
+        private final List<DiscountType> discountsList = new ArrayList<>();
 
         public Builder(DiscountType discountType) {
 
-            this.discountType = discountType;
-            discounts.add(discountType);
+            discountsList.add(discountType);
         }
 
         public Builder withDiscountType(DiscountType discountType) {
 
-            this.discountType = discountType;
-            discounts.add(discountType);
+            discountsList.add(discountType);
 
             return this;
         }
@@ -38,9 +36,17 @@ public class FareCalculatorServiceImpl implements FareCalculatorService {
 
             return new FareCalculatorServiceImpl(this);
         }
+
+        public List<DiscountType> getDiscounts() {
+            return discountsList;
+        }
     }
 
-    public void calculateFare(Ticket ticket) {
+    public List<DiscountType> getDiscounts() {
+        return discounts;
+    }
+
+    public void calculateFare(Ticket ticket, List<DiscountType> discounts) {
         if ((ticket.getOutTime() == -1L) || (ticket.getOutTime() < (ticket.getInTime()))) {
 
             throw new IllegalArgumentException
@@ -54,11 +60,11 @@ public class FareCalculatorServiceImpl implements FareCalculatorService {
         double fare = ticket.getParkingSpot().getParkingType().getFare();
 
         for (DiscountType discount : discounts) {
+            price = discount.calculatePrice(price, duration, fare);
 
-            price = discount.calculatePrice(duration, fare);
+            if (price == 0.0) return;
         }
 
         ticket.setPrice(price);
-
     }
 }

@@ -45,10 +45,7 @@ public class ParkingDataBaseIT {
         parkingSpotDAO = new ParkingSpotDAOImpl(dataBaseTestConfig);
         ticketDAO = new TicketDAOImpl(dataBaseTestConfig);
         dataBasePrepareService = new DataBasePrepareService();
-        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.NO_DISCOUNT)
-//                .withDiscountType(DiscountType.FREE_30_MIN)
-//                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
-                .build();
+        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.FREE_30_MIN).build();
     }
 
 
@@ -73,7 +70,7 @@ public class ParkingDataBaseIT {
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(inputReaderUtil.readSelection()).thenReturn(1);
-        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) -300);
+        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) -3000);
         ParkingService parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
 
@@ -110,7 +107,7 @@ public class ParkingDataBaseIT {
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(inputReaderUtil.readSelection()).thenReturn(2);
-        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) -300);
+        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) -3000);
         ParkingService parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
 

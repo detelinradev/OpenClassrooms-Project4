@@ -1,7 +1,8 @@
 package com.parkit.parkingsystem.serviceTests;
 
+import com.parkit.parkingsystem.constants.DiscountType;
+import com.parkit.parkingsystem.service.FareCalculatorServiceImpl;
 import com.parkit.parkingsystem.service.InteractiveShellImpl;
-import com.parkit.parkingsystem.service.contracts.InteractiveShell;
 import com.parkit.parkingsystem.service.contracts.ParkingService;
 import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
 import org.junit.jupiter.api.Assertions;
@@ -23,7 +24,9 @@ public class InteractiveShellTests {
     private ParkingService parkingService;
 
     @InjectMocks
-    private InteractiveShellImpl interactiveShell;
+    private final InteractiveShellImpl interactiveShell = new InteractiveShellImpl(new FareCalculatorServiceImpl
+            .Builder(DiscountType.NO_DISCOUNT)
+            .build());
 
     @Test
     public void load_Interface_Should_LoadInterface_When_IncomingVehicleSelected() {
@@ -33,7 +36,7 @@ public class InteractiveShellTests {
         doThrow(IllegalArgumentException.class).when(parkingService).processIncomingVehicle();
 
         //act
-        Assertions.assertThrows(IllegalArgumentException.class, () -> interactiveShell.loadInterface());
+        Assertions.assertThrows(IllegalArgumentException.class, interactiveShell::loadInterface);
 
         //assert
         verify(inputReaderUtil, times(1)).readSelection();
@@ -49,7 +52,7 @@ public class InteractiveShellTests {
         doThrow(IllegalArgumentException.class).when(parkingService).processExitingVehicle();
 
         //act
-        Assertions.assertThrows(IllegalArgumentException.class, () -> interactiveShell.loadInterface());
+        Assertions.assertThrows(IllegalArgumentException.class, interactiveShell::loadInterface);
 
         //assert
         verify(inputReaderUtil, times(1)).readSelection();

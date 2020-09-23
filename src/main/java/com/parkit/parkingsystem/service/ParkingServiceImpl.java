@@ -138,7 +138,7 @@ public class ParkingServiceImpl implements ParkingService {
             if(ticket != null) {
                 ticket.setOutTime(timeUtil.getTimeInSeconds());
 
-                fareCalculatorService.calculateFare(ticket);
+                fareCalculatorService.calculateFare(ticket, fareCalculatorService.getDiscounts());
                 ticketDAO.updateTicket(ticket);
 
                 ParkingSpot parkingSpot = ticket.getParkingSpot();
