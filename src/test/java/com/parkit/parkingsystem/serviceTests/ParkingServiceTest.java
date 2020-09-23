@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
+import com.parkit.parkingsystem.constants.DiscountType;
 import com.parkit.parkingsystem.service.ParkingServiceImpl;
 import com.parkit.parkingsystem.service.contracts.FareCalculatorService;
 import com.parkit.parkingsystem.util.contracts.TimeUtil;
@@ -22,8 +23,9 @@ import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.contracts.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
-import com.parkit.parkingsystem.service.contracts.ParkingService;
 import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
+
+import java.util.ArrayList;
 
 @ExtendWith(MockitoExtension.class)
 public class ParkingServiceTest {
@@ -47,6 +49,9 @@ public class ParkingServiceTest {
 
 	@Mock
 	FareCalculatorService fareCalculatorService;
+
+	@Mock
+	private ArrayList<DiscountType> discounts;
 
 	private ParkingSpot parkingSpot;
 	private Ticket ticket;
@@ -267,6 +272,7 @@ public class ParkingServiceTest {
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
 		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(true);
+		when(fareCalculatorService.getDiscounts()).thenReturn(discounts);
 
 		//act
 		parkingService.processExitingVehicle();
@@ -276,7 +282,7 @@ public class ParkingServiceTest {
 		verify(ticketDAO,times(1)).getTicket(any(String.class));
 		verify(ticketDAO,times(1)).updateTicket(any(Ticket.class));
 		verify(parkingSpotDAO,times(1)).updateParking(parkingSpot);
-		verify(fareCalculatorService,times(1)).calculateFare(ticket);
+		verify(fareCalculatorService,times(1)).calculateFare(any(Ticket.class), anyList());
 		verifyNoMoreInteractions(ticketDAO,parkingSpotDAO,inputReaderUtil,fareCalculatorService);
 	}
 
@@ -319,7 +325,8 @@ public class ParkingServiceTest {
 		//arrange
 		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
-		doThrow(IllegalArgumentException.class).when(fareCalculatorService).calculateFare(ticket);
+		when(fareCalculatorService.getDiscounts()).thenReturn(discounts);
+		doThrow(IllegalArgumentException.class).when(fareCalculatorService).calculateFare(ticket, discounts);
 
 		//act
 		parkingService.processExitingVehicle();
@@ -327,7 +334,7 @@ public class ParkingServiceTest {
 		//assert
 		verify(inputReaderUtil,times(1)).readVehicleRegistrationNumber();
 		verify(ticketDAO,times(1)).getTicket(any(String.class));
-		verify(fareCalculatorService,times(1)).calculateFare(ticket);
+		verify(fareCalculatorService,times(1)).calculateFare(ticket, discounts);
 		verifyNoMoreInteractions(ticketDAO,parkingSpotDAO,inputReaderUtil,fareCalculatorService);
 	}
 
@@ -339,6 +346,7 @@ public class ParkingServiceTest {
 		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenThrow(IllegalArgumentException.class);
+		when(fareCalculatorService.getDiscounts()).thenReturn(discounts);
 
 		//act
 		parkingService.processExitingVehicle();
@@ -346,20 +354,21 @@ public class ParkingServiceTest {
 		//assert
 		verify(inputReaderUtil,times(1)).readVehicleRegistrationNumber();
 		verify(ticketDAO,times(1)).getTicket(any(String.class));
-		verify(fareCalculatorService,times(1)).calculateFare(ticket);
+		verify(fareCalculatorService,times(1)).calculateFare(ticket, discounts);
 		verify(ticketDAO,times(1)).updateTicket(any(Ticket.class));
 		verifyNoMoreInteractions(ticketDAO,parkingSpotDAO,inputReaderUtil,fareCalculatorService);
 	}
 
 	@Tag("ProcessExitingVehicleTests")
 	@Test
-	public void process_ExitingVehicle_Should_ProcessExitingVehicle_When_UpdateParkingThrowsException()  {
+	public void process_ExitingVehicle_Should_NotProcessExitingVehicle_When_UpdateParkingThrowsException()  {
 
 		//arrange
 		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
 		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenThrow(IllegalArgumentException.class);
+		when(fareCalculatorService.getDiscounts()).thenReturn(discounts);
 
 		//act
 		parkingService.processExitingVehicle();
@@ -367,7 +376,7 @@ public class ParkingServiceTest {
 		//assert
 		verify(inputReaderUtil,times(1)).readVehicleRegistrationNumber();
 		verify(ticketDAO,times(1)).getTicket(any(String.class));
-		verify(fareCalculatorService,times(1)).calculateFare(ticket);
+		verify(fareCalculatorService,times(1)).calculateFare(ticket, discounts);
 		verify(ticketDAO,times(1)).updateTicket(any(Ticket.class));
 		verify(parkingSpotDAO,times(1)).updateParking(parkingSpot);
 		verifyNoMoreInteractions(ticketDAO,parkingSpotDAO,inputReaderUtil,fareCalculatorService);
@@ -375,13 +384,14 @@ public class ParkingServiceTest {
 
 	@Tag("ProcessExitingVehicleTests")
 	@Test
-	public void process_ExitingVehicle_Should_ProcessExitingVehicle_When_UpdateParkingReturnsFalse()  {
+	public void process_ExitingVehicle_Should_NotProcessExitingVehicle_When_UpdateParkingReturnsFalse()  {
 
 		//arrange
 		when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
 		when(ticketDAO.getTicket(anyString())).thenReturn(ticket);
 		when(ticketDAO.updateTicket(any(Ticket.class))).thenReturn(true);
 		when(parkingSpotDAO.updateParking(any(ParkingSpot.class))).thenReturn(false);
+		when(fareCalculatorService.getDiscounts()).thenReturn(discounts);
 
 		//act
 		parkingService.processExitingVehicle();
@@ -389,7 +399,7 @@ public class ParkingServiceTest {
 		//assert
 		verify(inputReaderUtil,times(1)).readVehicleRegistrationNumber();
 		verify(ticketDAO,times(1)).getTicket(any(String.class));
-		verify(fareCalculatorService,times(1)).calculateFare(ticket);
+		verify(fareCalculatorService,times(1)).calculateFare(ticket, discounts);
 		verify(ticketDAO,times(1)).updateTicket(any(Ticket.class));
 		verify(parkingSpotDAO,times(1)).updateParking(parkingSpot);
 		verifyNoMoreInteractions(ticketDAO,parkingSpotDAO,inputReaderUtil,fareCalculatorService);

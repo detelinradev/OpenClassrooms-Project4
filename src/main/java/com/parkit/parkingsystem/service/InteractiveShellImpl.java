@@ -20,12 +20,16 @@ public class InteractiveShellImpl implements InteractiveShell {
     private static final Logger logger = LogManager.getLogger("InteractiveShell");
 
     private InputReaderUtil inputReaderUtil = new InputReaderUtilImpl();
-    private final ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAOImpl(new DataBaseConfigImpl());
-    private final TicketDAO ticketDAO = new TicketDAOImpl(new DataBaseConfigImpl());
-    private final TimeUtil timeUtil = new TimeUtilImpl();
-    private final FareCalculatorService fareCalculatorService = new FareCalculatorServiceImpl();
-    private ParkingService parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil,
-            fareCalculatorService);
+    private ParkingService parkingService;
+
+    public InteractiveShellImpl(FareCalculatorService fareCalculatorService) {
+        ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAOImpl(new DataBaseConfigImpl());
+        TicketDAO ticketDAO = new TicketDAOImpl(new DataBaseConfigImpl());
+        TimeUtil timeUtil = new TimeUtilImpl();
+        parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil,
+                fareCalculatorService);
+    }
+
 
     public void loadInterface() {
 
