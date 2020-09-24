@@ -68,7 +68,7 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void parkingACar_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed() {
+    public void parkingCar_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed() {
 
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
@@ -86,13 +86,11 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void parkingLotExitCar_Should_CreateAPriceAndOutTime_When_CorrectParametersPassed() {
+    public void exitingCar_Should_CreateAPriceAndOutTime_When_CorrectParametersPassed() {
 
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-        ParkingService parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
-                , fareCalculatorService);
-        parkingACar_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
+        parkingCar_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
 
         //act
@@ -104,7 +102,7 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void parkingABike_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed() {
+    public void parkingBike_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed() {
 
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
@@ -121,11 +119,11 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void parkingLotExitBike_Should_CreateAPriceAndOutTime_When_CorrectParametersPassed(){
+    public void exitingBike_Should_CreateAPriceAndOutTime_When_CorrectParametersPassed(){
 
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-        parkingABike_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
+        parkingBike_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
 
         //act
@@ -137,7 +135,7 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void parkingACar_Should_NotCreateATicket_When_ChoiceOfTaskIsWrong() {
+    public void parkingCar_Should_NotCreateATicket_When_ChoiceOfTaskIsWrong() {
 
         //arrange
         when(inputReaderUtil.readSelection()).thenReturn(3);
@@ -151,7 +149,7 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void parkingACar_Should_CreateATicketWithLessThan30MinStayAndUpdateParkingAvailability_When_CorrectParametersPassed() {
+    public void parkingCar_Should_CreateATicketWithLessThan30MinStayAndUpdateParkingAvailability_When_CorrectParametersPassed() {
 
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
@@ -168,14 +166,14 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void parkingLotExitCar_Should_CreateAPriceEqualsZeroAndOutTime_When_TimeInParkingLessThan30minAndDiscountType30MinFree() {
+    public void exitingCar_Should_CreateAPriceEqualsZeroAndOutTime_When_TimeInParkingLessThan30minAndDiscountType30MinFree() {
 
         //arrange
         fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.FREE_30_MIN).build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-        parkingACar_Should_CreateATicketWithLessThan30MinStayAndUpdateParkingAvailability_When_CorrectParametersPassed();
+        parkingCar_Should_CreateATicketWithLessThan30MinStayAndUpdateParkingAvailability_When_CorrectParametersPassed();
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
 
         //act
@@ -187,14 +185,14 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void parkingLotExitCar_Should_CreateAPriceGreaterThanZeroAndOutTime_When_TimeInParkingMoreThan30minAndDiscountType30MinFree() {
+    public void exitingCar_Should_CreateAPriceGreaterThanZeroAndOutTime_When_TimeInParkingMoreThan30minAndDiscountType30MinFree() {
 
         //arrange
         fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.FREE_30_MIN).build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-        parkingACar_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
+        parkingCar_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
 
         //act
@@ -206,7 +204,7 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void parkingABike_Should_CreateATicketWithLessThan30MinStayAndUpdateParkingAvailability_When_CorrectParametersPassed() {
+    public void parkingBike_Should_CreateATicketWithLessThan30MinStayAndUpdateParkingAvailability_When_CorrectParametersPassed() {
 
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
@@ -223,14 +221,14 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void parkingLotExitBike_Should_CreateAPriceEqualsZeroAndOutTime_When_TimeInParkingLessThan30minAndDiscountType30MinFree() {
+    public void exitingBike_Should_CreateAPriceEqualsZeroAndOutTime_When_TimeInParkingLessThan30minAndDiscountType30MinFree() {
 
         //arrange
         fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.FREE_30_MIN).build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-        parkingABike_Should_CreateATicketWithLessThan30MinStayAndUpdateParkingAvailability_When_CorrectParametersPassed();
+        parkingBike_Should_CreateATicketWithLessThan30MinStayAndUpdateParkingAvailability_When_CorrectParametersPassed();
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
 
         //act
@@ -242,14 +240,146 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void parkingLotExitBike_Should_CreateAPriceGreaterThanZeroAndOutTime_When_TimeInParkingMoreThan30minAndDiscountType30MinFree() {
+    public void exitingBike_Should_CreateAPriceGreaterThanZeroAndOutTime_When_TimeInParkingMoreThan30minAndDiscountType30MinFree() {
 
         //arrange
         fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.FREE_30_MIN).build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
-        parkingABike_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
+        parkingBike_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
+        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
+
+        //act
+        parkingService.processExitingVehicle();
+
+        //assert
+        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0.0);
+        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+    }
+
+    @Test
+    public void exitingCar_Should_CreateAPriceEqualsZeroAndOutTime_When_TimeInParkingLessThan30minAndDiscountType30MinFreeAndRecurringUsers5Percent() {
+
+        //arrange
+        fareCalculatorService = new FareCalculatorServiceImpl
+                .Builder(DiscountType.FREE_30_MIN)
+                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .build();
+        parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
+                , fareCalculatorService);
+        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+        parkingCar_Should_CreateATicketWithLessThan30MinStayAndUpdateParkingAvailability_When_CorrectParametersPassed();
+        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
+
+        //act
+        parkingService.processExitingVehicle();
+
+        //assert
+        Assertions.assertEquals(0.0,ticketDAO.getTicket("ABCDEF").getPrice());
+        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+    }
+
+    @Test
+    public void exitingCar_Should_CreateAPriceGreaterThanZeroAndOutTime_When_TimeInParkingMoreThan30minAndDiscountType30MinFreeAndRecurringUsers5Percent() {
+
+        //arrange
+        fareCalculatorService = new FareCalculatorServiceImpl
+                .Builder(DiscountType.FREE_30_MIN)
+                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .build();
+        parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
+                , fareCalculatorService);
+        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+        parkingCar_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
+        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
+
+        //act
+        parkingService.processExitingVehicle();
+
+        //assert
+        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0.0);
+        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+    }
+
+    @Test
+    public void exitingBike_Should_CreateAPriceEqualsZeroAndOutTime_When_TimeInParkingLessThan30minAndDiscountType30MinFreeAndRecurringUsers5Percent() {
+
+        //arrange
+        fareCalculatorService = new FareCalculatorServiceImpl
+                .Builder(DiscountType.FREE_30_MIN)
+                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .build();
+        parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
+                , fareCalculatorService);
+        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+        parkingBike_Should_CreateATicketWithLessThan30MinStayAndUpdateParkingAvailability_When_CorrectParametersPassed();
+        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
+
+        //act
+        parkingService.processExitingVehicle();
+
+        //assert
+        Assertions.assertEquals(0.0,ticketDAO.getTicket("ABCDEF").getPrice());
+        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+    }
+
+    @Test
+    public void exitingBike_Should_CreateAPriceGreaterThanZeroAndOutTime_When_TimeInParkingMoreThan30minAndDiscountType30MinFreeAndRecurringUsers5Percent() {
+
+        //arrange
+        fareCalculatorService = new FareCalculatorServiceImpl
+                .Builder(DiscountType.FREE_30_MIN)
+                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .build();
+        parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
+                , fareCalculatorService);
+        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+        parkingBike_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
+        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
+
+        //act
+        parkingService.processExitingVehicle();
+
+        //assert
+        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0.0);
+        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+    }
+
+    @Test
+    public void exitingCar_Should_CreateAPriceAndOutTime_When_CorrectParametersPassedAndDiscountTypeNODISCOUNTAndRECURRINGUSER5PERCENT() {
+
+        //arrange
+        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+        fareCalculatorService = new FareCalculatorServiceImpl
+                .Builder(DiscountType.NO_DISCOUNT)
+                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .build();
+        parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
+                , fareCalculatorService);
+        parkingCar_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
+        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
+
+        //act
+        parkingService.processExitingVehicle();
+
+        //assert
+        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0.0);
+        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+    }
+
+    @Test
+    public void exitingBike_Should_CreateAPriceAndOutTime_When_CorrectParametersPassedAndDiscountTypeNODISCOUNTAndRECURRINGUSER5PERCENT(){
+
+        //arrange
+        when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+        fareCalculatorService = new FareCalculatorServiceImpl
+                .Builder(DiscountType.NO_DISCOUNT)
+                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .build();
+        parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
+                , fareCalculatorService);
+        parkingBike_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
 
         //act
