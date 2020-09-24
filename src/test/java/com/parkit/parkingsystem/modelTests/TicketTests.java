@@ -3,10 +3,10 @@ package com.parkit.parkingsystem.modelTests;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
+@Tag("TicketTests")
+@DisplayName("Unit tests for Ticket class")
 public class TicketTests {
 
     private Ticket ticket;

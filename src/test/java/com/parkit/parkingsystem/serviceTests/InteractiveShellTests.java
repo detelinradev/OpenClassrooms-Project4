@@ -6,6 +6,8 @@ import com.parkit.parkingsystem.service.InteractiveShellImpl;
 import com.parkit.parkingsystem.service.contracts.ParkingService;
 import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
 
+@Tag("InteractiveShellTests")
+@DisplayName("Unit tests for InteractiveShellImpl class")
 @ExtendWith(MockitoExtension.class)
 public class InteractiveShellTests {
 
