@@ -1,6 +1,7 @@
 package com.parkit.parkingsystem.service;
 
 import com.parkit.parkingsystem.config.DataBaseConfigImpl;
+import com.parkit.parkingsystem.constants.ParkingCommand;
 import com.parkit.parkingsystem.dao.TicketDAOImpl;
 import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.ParkingSpotDAOImpl;
@@ -14,6 +15,8 @@ import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
 import com.parkit.parkingsystem.util.contracts.TimeUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Arrays;
 
 public class InteractiveShellImpl implements InteractiveShell {
 
@@ -39,25 +42,16 @@ public class InteractiveShellImpl implements InteractiveShell {
         boolean continueApp = true;
 
         while (continueApp) {
+
             loadMenu();
+
             int option = inputReaderUtil.readSelection();
-            switch (option) {
-                case 1: {
-                    parkingService.processIncomingVehicle();
-                    break;
-                }
-                case 2: {
-                    parkingService.processExitingVehicle();
-                    break;
-                }
-                case 3: {
-                    System.out.println("Exiting from the system!");
-                    continueApp = false;
-                    break;
-                }
-                default:
-                    System.out.println("Unsupported option. Please enter a number corresponding to the provided menu");
-            }
+
+            ParkingCommand parkingCommand = Arrays.stream(ParkingCommand.values())
+                    .filter(pc -> pc.getCommand() == option)
+                    .findFirst()
+                    .orElse(ParkingCommand.NOT_FOUND);
+            continueApp = parkingCommand.execute(parkingService);
         }
     }
 

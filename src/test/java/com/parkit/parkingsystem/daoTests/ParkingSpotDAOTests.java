@@ -58,7 +58,7 @@ public class ParkingSpotDAOTests {
         }
     }
 
-    @AfterAll
+    @AfterEach
     public void tearDown() throws SQLException {
         preparedStatement.close();
         resultSet.close();

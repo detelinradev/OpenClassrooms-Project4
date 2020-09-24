@@ -20,7 +20,6 @@ import java.time.format.DateTimeFormatter;
 public class ParkingServiceImpl implements ParkingService {
 
     private static final Logger logger = LogManager.getLogger("ParkingService");
-
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm d.MMMM.yyyy");
 
     private final InputReaderUtil inputReaderUtil;
@@ -158,8 +157,7 @@ public class ParkingServiceImpl implements ParkingService {
 
             }else throw new IllegalArgumentException("Error creating ticket");
 
-        } catch (
-                Exception e) {
+        } catch (Exception e) {
             logger.error("Unable to process exiting vehicle", e);
         }
     }

@@ -32,8 +32,8 @@ public class ParkingDataBaseIT {
     private static ParkingSpotDAO parkingSpotDAO;
     private static TicketDAO ticketDAO;
     private static DataBasePrepareService dataBasePrepareService;
-    private static FareCalculatorService fareCalculatorService;
-    private static ParkingService parkingService;
+    private FareCalculatorService fareCalculatorService;
+    private ParkingService parkingService;
 
     @Mock
     private static InputReaderUtil inputReaderUtil;
@@ -46,8 +46,6 @@ public class ParkingDataBaseIT {
         parkingSpotDAO = new ParkingSpotDAOImpl(dataBaseTestConfig);
         ticketDAO = new TicketDAOImpl(dataBaseTestConfig);
         dataBasePrepareService = new DataBasePrepareService();
-        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.NO_DISCOUNT).build();
-
     }
 
 
@@ -55,6 +53,7 @@ public class ParkingDataBaseIT {
     private void setUpPerTest() {
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
+        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.NO_DISCOUNT).build();
     }
 
     @AfterEach
@@ -90,6 +89,9 @@ public class ParkingDataBaseIT {
 
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+        parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
+                , fareCalculatorService);
+        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.NO_DISCOUNT).build();
         parkingCar_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
 
@@ -123,6 +125,9 @@ public class ParkingDataBaseIT {
 
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
+        parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
+                , fareCalculatorService);
+        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.NO_DISCOUNT).build();
         parkingBike_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
 

@@ -12,7 +12,8 @@ public class App {
     public static void main(String[] args){
         logger.info("Initializing Parking System");
         InteractiveShell interactiveShell = new InteractiveShellImpl(new FareCalculatorServiceImpl
-                .Builder(DiscountType.FREE_30_MIN)
+                .Builder(DiscountType.NO_DISCOUNT)
+                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
                 .build());
         interactiveShell.loadInterface();
     }
