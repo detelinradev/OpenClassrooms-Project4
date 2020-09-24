@@ -61,6 +61,13 @@ public class TicketDAOTests {
         }
     }
 
+    @AfterAll
+    public void tearDown() throws SQLException {
+        preparedStatement.close();
+        resultSet.close();
+        connection.close();
+    }
+
     @Nested
     @Tag("methodSaveTicketTests")
     @DisplayName("Tests for method saveTicket in TicketDAO class")

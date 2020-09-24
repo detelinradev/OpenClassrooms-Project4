@@ -35,7 +35,7 @@ public class ParkingSpotDAOTests {
     private PreparedStatement preparedStatement;
 
     @Mock
-    ResultSet resultSet;
+    private ResultSet resultSet;
 
     private ParkingSpot parkingSpot;
 
@@ -56,6 +56,13 @@ public class ParkingSpotDAOTests {
             e.printStackTrace();
             throw new RuntimeException("Failed to set up test mock objects");
         }
+    }
+
+    @AfterAll
+    public void tearDown() throws SQLException {
+        preparedStatement.close();
+        resultSet.close();
+        connection.close();
     }
 
     @Nested

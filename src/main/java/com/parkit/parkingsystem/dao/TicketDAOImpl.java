@@ -26,7 +26,6 @@ public class TicketDAOImpl implements TicketDAO {
     public boolean saveTicket(Ticket ticket) {
 
         try(Connection con = dataBaseConfig.getConnection();
-
             PreparedStatement ps = con.prepareStatement(DBConstants.SAVE_TICKET)) {
 
             // ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
@@ -88,9 +87,10 @@ public class TicketDAOImpl implements TicketDAO {
 
     public boolean updateTicket(Ticket ticket) {
 
-        try(Connection con = dataBaseConfig.getConnection()) {
+        try(Connection con = dataBaseConfig.getConnection();
+            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TICKET)) {
 
-            PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_TICKET);
+
 
             ps.setDouble(1, ticket.getPrice());
             ps.setTimestamp(2, new Timestamp(ticket.getOutTime()));
