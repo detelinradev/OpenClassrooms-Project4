@@ -14,9 +14,5 @@ public interface DataBaseConfig {
 
     Connection getConnection() throws ClassNotFoundException, SQLException;
 
-    void closeConnection(Connection con);
-
-    void closePreparedStatement(PreparedStatement ps);
-
     void closeResultSet(ResultSet rs);
 }

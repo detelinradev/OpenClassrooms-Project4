@@ -5,6 +5,7 @@ import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAOImpl;
 import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
+import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import org.junit.jupiter.api.*;
@@ -38,6 +39,7 @@ public class ParkingSpotDAOTests {
     private ResultSet resultSet;
 
     private ParkingSpot parkingSpot;
+    private final DataBaseTestConfig dataBaseTestConfig = new DataBaseTestConfig();
 
     @BeforeEach
     public void setUpPerTest() {
@@ -59,10 +61,10 @@ public class ParkingSpotDAOTests {
     }
 
     @AfterEach
-    public void tearDown() throws SQLException {
-        preparedStatement.close();
-        resultSet.close();
-        connection.close();
+    public void tearDown() {
+        dataBaseTestConfig.closePreparedStatement(preparedStatement);
+        dataBaseTestConfig.closeResultSet(resultSet);
+        dataBaseTestConfig.closeConnection(connection);
     }
 
     @Nested
