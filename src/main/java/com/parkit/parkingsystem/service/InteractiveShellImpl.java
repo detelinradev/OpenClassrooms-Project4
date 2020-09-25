@@ -23,12 +23,14 @@ public class InteractiveShellImpl implements InteractiveShell {
     private static final Logger logger = LogManager.getLogger("InteractiveShell");
 
     private InputReaderUtil inputReaderUtil = new InputReaderUtilImpl();
+    private ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAOImpl(new DataBaseConfigImpl());
+    private TicketDAO ticketDAO = new TicketDAOImpl(new DataBaseConfigImpl());
+    private TimeUtil timeUtil = new TimeUtilImpl();
     private ParkingService parkingService;
 
+
     public InteractiveShellImpl(FareCalculatorService fareCalculatorService) {
-        ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAOImpl(new DataBaseConfigImpl());
-        TicketDAO ticketDAO = new TicketDAOImpl(new DataBaseConfigImpl());
-        TimeUtil timeUtil = new TimeUtilImpl();
+
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil,
                 fareCalculatorService);
     }
@@ -47,11 +49,10 @@ public class InteractiveShellImpl implements InteractiveShell {
 
             int option = inputReaderUtil.readSelection();
 
-            ParkingCommand parkingCommand = Arrays.stream(ParkingCommand.values())
-                    .filter(pc -> pc.getCommand() == option)
+            continueApp = Arrays.stream(ParkingCommand.values())
+                    .filter(parkingCommand -> parkingCommand.getCommand() == option)
                     .findFirst()
-                    .orElse(ParkingCommand.NOT_FOUND);
-            continueApp = parkingCommand.execute(parkingService);
+                    .orElse(ParkingCommand.NOT_FOUND).execute(parkingService);
         }
     }
 

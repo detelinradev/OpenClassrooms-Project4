@@ -16,6 +16,8 @@ import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.Optional;
 
 public class ParkingServiceImpl implements ParkingService {
 
@@ -29,7 +31,7 @@ public class ParkingServiceImpl implements ParkingService {
     private final FareCalculatorService fareCalculatorService;
 
     public ParkingServiceImpl(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO, TimeUtil timeUtil,
-                          FareCalculatorService fareCalculatorService ) {
+                              FareCalculatorService fareCalculatorService) {
         this.inputReaderUtil = inputReaderUtil;
         this.parkingSpotDAO = parkingSpotDAO;
         this.ticketDAO = ticketDAO;
@@ -41,31 +43,28 @@ public class ParkingServiceImpl implements ParkingService {
         try {
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
 
-            if (parkingSpot != null && parkingSpot.getId() > 0) {
+            parkingSpot.setAvailable(false);
 
-                String vehicleRegNumber = getVehicleRegNumber();
-                parkingSpot.setAvailable(false);
+            // allot this parking space and mark it's availability as false
+            parkingSpotDAO.updateParking(parkingSpot);
 
-                // allot this parking space and mark it's availability as false
-                parkingSpotDAO.updateParking(parkingSpot);
+            String vehicleRegNumber = getVehicleRegNumber();
+            long inTime = timeUtil.getTimeInSeconds();
 
-                long inTime = timeUtil.getTimeInSeconds();
+            Ticket ticket = new Ticket();
 
-                Ticket ticket = new Ticket();
-                // ID, PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE, IN_TIME, OUT_TIME)
-//                ticket.setId(1);
-                ticket.setParkingSpot(parkingSpot);
-                ticket.setVehicleRegNumber(vehicleRegNumber);
-                ticket.setInTime(inTime);
+            ticket.setParkingSpot(parkingSpot);
+            ticket.setVehicleRegNumber(vehicleRegNumber);
+            ticket.setInTime(inTime);
 
-                ticketDAO.saveTicket(ticket);
+            ticketDAO.saveTicket(ticket);
 
-                System.out.println("Generated Ticket and saved in DB");
-                System.out.println("Please park your vehicle in spot number:" + parkingSpot.getId());
-                System.out
-                        .println("Recorded in-time for vehicle number:" + vehicleRegNumber + " is: "
-                                + LocalDateTime.ofEpochSecond(inTime, 0, ZoneOffset.UTC).format(dateTimeFormatter));
-            }
+            System.out.println("Generated Ticket and saved in DB");
+            System.out.println("Please park your vehicle in spot number:" + parkingSpot.getId());
+            System.out
+                    .println("Recorded in-time for vehicle number:" + vehicleRegNumber + " is: "
+                            + LocalDateTime.ofEpochSecond(inTime, 0, ZoneOffset.UTC).format(dateTimeFormatter));
+
         } catch (Exception e) {
             logger.error("Unable to process incoming vehicle", e);
         }
@@ -81,29 +80,21 @@ public class ParkingServiceImpl implements ParkingService {
     public ParkingSpot getNextParkingNumberIfAvailable() {
 
         int parkingNumber;
-        ParkingSpot parkingSpot = null;
+        ParkingSpot parkingSpot;
 
-        try {
-            ParkingType parkingType = getVehicleType();
-            parkingNumber = parkingSpotDAO.getNextAvailableSlot(parkingType);
+        ParkingType parkingType = getVehicleType();
+        parkingNumber = parkingSpotDAO.getNextAvailableSlot(parkingType);
 
-            if (parkingNumber > 0) {
+        if (parkingNumber > 0) {
 
-                parkingSpot = new ParkingSpot(parkingNumber, parkingType, true);
+            parkingSpot = new ParkingSpot(parkingNumber, parkingType, true);
 
-            } else {
+        } else {
 
-                throw new IllegalArgumentException("Error fetching parking number from DB. Parking slots might be full");
-            }
-        } catch (IllegalArgumentException ie) {
-
-            logger.error("Error parsing user input for type of vehicle", ie);
-
-        } catch (Exception e) {
-
-            logger.error("Error fetching next available parking slot", e);
-
+            logger.error("Error fetching next available parking slot");
+            throw new IllegalArgumentException("Error fetching parking number from DB. Parking slots might be full");
         }
+
         return parkingSpot;
     }
 
@@ -115,47 +106,44 @@ public class ParkingServiceImpl implements ParkingService {
 
         int input = inputReaderUtil.readSelection();
 
-        switch (input) {
-            case 1: {
-                return ParkingType.CAR;
-            }
-            case 2: {
-                return ParkingType.BIKE;
-            }
-            default: {
-                System.out.println("Incorrect input provided");
-                throw new IllegalArgumentException("Entered input is invalid");
-            }
-        }
+        return Arrays.stream(ParkingType.values())
+                .filter(parkingType -> parkingType.getNum() == input)
+                .findFirst()
+                .orElseThrow(() -> {
+                    System.out.println("Incorrect input provided");
+                    throw new IllegalArgumentException("Entered input is invalid");
+                });
     }
 
     public void processExitingVehicle() {
         try {
             String vehicleRegNumber = getVehicleRegNumber();
 
-            Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
-            if(ticket != null) {
-                ticket.setOutTime(timeUtil.getTimeInSeconds());
+            Ticket ticket = ticketDAO.getTicket(vehicleRegNumber)
+                    .orElseThrow(() -> new IllegalArgumentException("Error creating ticket"));
 
-                fareCalculatorService.calculateFare(ticket, fareCalculatorService.getDiscounts(),
-                        fareCalculatorService.getRecurringUsers());
-                ticketDAO.updateTicket(ticket);
+            ticket.setOutTime(timeUtil.getTimeInSeconds());
 
-                ParkingSpot parkingSpot = ticket.getParkingSpot();
-                parkingSpot.setAvailable(true);
+            fareCalculatorService.calculateFare(ticket, fareCalculatorService.getDiscounts(),
+                    fareCalculatorService.getRecurringUsers());
 
-                if(parkingSpotDAO.updateParking(parkingSpot)) {
+            ticketDAO.updateTicket(ticket);
 
-                    DecimalFormat df = new DecimalFormat("#.##");
+            ParkingSpot parkingSpot = ticket.getParkingSpot();
 
-                    System.out.println("Please pay the parking fare: " + df.format(ticket.getPrice()) + "€");
-                    System.out.println("Recorded out-time for vehicle number: " + ticket.getVehicleRegNumber() + " is: "
-                            + LocalDateTime.ofEpochSecond(ticket.getOutTime(), 0, ZoneOffset.UTC)
-                            .format(dateTimeFormatter));
+            parkingSpot.setAvailable(true);
 
-                }else throw new IllegalArgumentException("Error updating parking");
+            if (parkingSpotDAO.updateParking(parkingSpot)) {
 
-            }else throw new IllegalArgumentException("Error creating ticket");
+                DecimalFormat df = new DecimalFormat("#.##");
+
+                System.out.println("Please pay the parking fare: " + df.format(ticket.getPrice()) + "€");
+                System.out.println("Recorded out-time for vehicle number: " + ticket.getVehicleRegNumber() + " is: "
+                        + LocalDateTime.ofEpochSecond(ticket.getOutTime(), 0, ZoneOffset.UTC)
+                        .format(dateTimeFormatter));
+
+            } else throw new IllegalArgumentException("Error updating parking");
+
 
         } catch (Exception e) {
             logger.error("Unable to process exiting vehicle", e);

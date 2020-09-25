@@ -6,6 +6,7 @@ import com.parkit.parkingsystem.constants.DiscountType;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAOImpl;
 import com.parkit.parkingsystem.dao.TicketDAOImpl;
+import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorServiceImpl;
 import com.parkit.parkingsystem.service.contracts.FareCalculatorService;
 import com.parkit.parkingsystem.service.ParkingServiceImpl;
@@ -24,6 +25,7 @@ import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class ParkingDataBaseIT {
@@ -99,8 +101,9 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         //assert
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0.0);
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+        Ticket ticket = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
+        Assertions.assertTrue(ticket.getPrice() > 0.0);
+        Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
     @Test
@@ -135,8 +138,9 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         //assert
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0.0);
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+        Ticket ticket = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
+        Assertions.assertTrue(ticket.getPrice() > 0.0);
+        Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
     @Test
@@ -149,7 +153,7 @@ public class ParkingDataBaseIT {
         parkingService.processIncomingVehicle();
 
         //assert
-        Assertions.assertNull(ticketDAO.getTicket("ABCDEF"));
+        Assertions.assertEquals(Optional.empty() ,ticketDAO.getTicket("ABCDEF"));
 
     }
 
@@ -185,8 +189,9 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         //assert
-        Assertions.assertEquals(0.0,ticketDAO.getTicket("ABCDEF").getPrice());
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+        Ticket ticket = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
+        Assertions.assertEquals(0.0,ticket.getPrice());
+        Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
     @Test
@@ -204,8 +209,9 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         //assert
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0.0);
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+        Ticket ticket = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
+        Assertions.assertTrue(ticket.getPrice() > 0.0);
+        Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
     @Test
@@ -240,8 +246,9 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         //assert
-        Assertions.assertEquals(0.0,ticketDAO.getTicket("ABCDEF").getPrice());
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+        Ticket ticket = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
+        Assertions.assertEquals(0.0,ticket.getPrice());
+        Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
     @Test
@@ -259,8 +266,9 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         //assert
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0.0);
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+        Ticket ticket = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
+        Assertions.assertTrue(ticket.getPrice() > 0.0);
+        Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
     @Test
@@ -281,8 +289,9 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         //assert
-        Assertions.assertEquals(0.0,ticketDAO.getTicket("ABCDEF").getPrice());
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+        Ticket ticket = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
+        Assertions.assertEquals(0.0,ticket.getPrice());
+        Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
     @Test
@@ -303,8 +312,9 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         //assert
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0.0);
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+        Ticket ticket = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
+        Assertions.assertTrue(ticket.getPrice() > 0.0);
+        Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
     @Test
@@ -325,8 +335,9 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         //assert
-        Assertions.assertEquals(0.0,ticketDAO.getTicket("ABCDEF").getPrice());
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+        Ticket ticket = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
+        Assertions.assertEquals(0.0,ticket.getPrice());
+        Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
     @Test
@@ -347,8 +358,9 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         //assert
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0.0);
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+        Ticket ticket = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
+        Assertions.assertTrue(ticket.getPrice() > 0.0);
+        Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
     @Test
@@ -369,8 +381,9 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         //assert
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0.0);
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+        Ticket ticket = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
+        Assertions.assertTrue(ticket.getPrice() > 0.0);
+        Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
     @Test
@@ -391,8 +404,9 @@ public class ParkingDataBaseIT {
         parkingService.processExitingVehicle();
 
         //assert
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getPrice() > 0.0);
-        Assertions.assertTrue(ticketDAO.getTicket("ABCDEF").getOutTime() > 0);
+        Ticket ticket = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
+        Assertions.assertTrue(ticket.getPrice() > 0.0);
+        Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
 }

@@ -12,12 +12,13 @@ import org.apache.logging.log4j.Logger;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Optional;
 
 public class TicketDAOImpl implements TicketDAO {
 
     private static final Logger logger = LogManager.getLogger("TicketDAO");
 
-    public DataBaseConfig dataBaseConfig;
+    private final DataBaseConfig dataBaseConfig;
 
     public TicketDAOImpl(DataBaseConfig dataBaseConfig) {
         this.dataBaseConfig = dataBaseConfig;
@@ -46,7 +47,7 @@ public class TicketDAOImpl implements TicketDAO {
         }
     }
 
-    public Ticket getTicket(String vehicleRegNumber) {
+    public Optional<Ticket> getTicket(String vehicleRegNumber) {
 
         Ticket ticket = null;
         ResultSet rs = null;
@@ -82,7 +83,7 @@ public class TicketDAOImpl implements TicketDAO {
 
             dataBaseConfig.closeResultSet(rs);
         }
-        return ticket;
+        return Optional.ofNullable(ticket);
     }
 
     public boolean updateTicket(Ticket ticket) {

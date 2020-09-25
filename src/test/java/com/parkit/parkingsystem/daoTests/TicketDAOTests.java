@@ -14,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.*;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
@@ -172,7 +173,7 @@ public class TicketDAOTests {
             when(timestamp.getTime()).thenReturn(1000L);
 
             //act
-            Ticket ticketNew = ticketDAO.getTicket("ABCDEF");
+            Ticket ticketNew = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
 
             //assert
             Assertions.assertEquals(ticket.getId(), ticketNew.getId());
@@ -276,7 +277,7 @@ public class TicketDAOTests {
             when(resultSet.next()).thenReturn(false);
 
             //act & assert
-            Assertions.assertNull(ticketDAO.getTicket("ABCDEF"));
+            Assertions.assertEquals(Optional.empty() ,ticketDAO.getTicket("ABCDEF"));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(dataBaseConfig, times(1)).closeResultSet(resultSet);
             verify(connection, times(1)).prepareStatement(DBConstants.GET_TICKET);
