@@ -8,7 +8,7 @@ public interface TicketDAO {
 
 	 boolean saveTicket(Ticket ticket);
 
-	 Optional<Ticket> getTicket(String vehicleRegNumber);
+	 Ticket getTicket(String vehicleRegNumber);
 
 	 boolean updateTicket(Ticket ticket);
 }

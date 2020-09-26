@@ -3,6 +3,7 @@ package com.parkit.parkingsystem.service;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.contracts.TicketDAO;
+import com.parkit.parkingsystem.exception.UnsuccessfulOperationException;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.contracts.FareCalculatorService;
@@ -17,7 +18,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Optional;
 
 /**
  *   The <class>ParkingService</class> class is the service of the application, where all stages to successfully park
@@ -30,7 +30,7 @@ import java.util.Optional;
  * <class>TicketDAO</class> and <class>TimeUtil</class> variables which are used to create dependency with different
  * parts of the app in order to apply various operations.
  *
- *  @author Detelin Radev
+ * @author Detelin Radev
  */
 public class ParkingServiceImpl implements ParkingService {
 
@@ -44,14 +44,14 @@ public class ParkingServiceImpl implements ParkingService {
     private final FareCalculatorService fareCalculatorService;
 
     /**
-     * This constructor stores <class>FareCalculatorService</class>, <class>InputReaderUtil</class>, <class>ParkingSpotDAO</class>,
-     *  * <class>TicketDAO</class> and <class>TimeUtil</class> variables and creates instance of ParkingServiceImpl
+     *   This constructor stores <class>FareCalculatorService</class>, <class>InputReaderUtil</class>, <class>ParkingSpotDAO</class>,
+     * <class>TicketDAO</class> and <class>TimeUtil</class> variables and creates instance of ParkingServiceImpl
      *
      * @param fareCalculatorService dependency variable presenting  price calculating function of the app
-     * @param inputReaderUtil dependency variable presenting  input reading function of the app
-     * @param parkingSpotDAO dependency variable presenting  parking spot handling function of the app
-     * @param ticketDAO dependency variable presenting  ticket handling function of the app
-     * @param timeUtil dependency variable presenting  time handling function of the app
+     * @param inputReaderUtil       dependency variable presenting  input reading function of the app
+     * @param parkingSpotDAO        dependency variable presenting  parking spot handling function of the app
+     * @param ticketDAO             dependency variable presenting  ticket handling function of the app
+     * @param timeUtil              dependency variable presenting  time handling function of the app
      */
     public ParkingServiceImpl(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO, TimeUtil timeUtil,
                               FareCalculatorService fareCalculatorService) {
@@ -63,38 +63,45 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     /**
-     *  Method handles incoming vehicle through acquiring valid parking spot from the database and issuing a ticket for
+     *   Method handles incoming vehicle through acquiring valid parking spot from the database and issuing a ticket for
      * parking the vehicle with user provided details. Ticket is then saved in the database and result is printed on the
-     * console. All input and database related exceptions are handled internally and caught in global try catch block with
+     * console.
+     * <p>
+     *  All input and database related exceptions are handled internally and caught in global try catch block with
      * appropriate messages printed to the console.
-     *
      */
     public void processIncomingVehicle() {
         try {
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
 
-            parkingSpot.setAvailable(false);
+            if (parkingSpot != ParkingSpot.NOT_AVAILABLE) {
+                parkingSpot.setAvailable(false);
 
-            parkingSpotDAO.updateParking(parkingSpot);
+                parkingSpotDAO.updateParking(parkingSpot);
 
-            String vehicleRegNumber = getVehicleRegNumber();
-            long inTime = timeUtil.getTimeInSeconds();
+                String vehicleRegNumber = getVehicleRegNumber();
+                long inTime = timeUtil.getTimeInSeconds();
 
-            Ticket ticket = new Ticket();
+                Ticket ticket = new Ticket();
 
-            ticket.setParkingSpot(parkingSpot);
-            ticket.setVehicleRegNumber(vehicleRegNumber);
-            ticket.setInTime(inTime);
+                ticket.setParkingSpot(parkingSpot);
+                ticket.setVehicleRegNumber(vehicleRegNumber);
+                ticket.setInTime(inTime);
 
-            ticketDAO.saveTicket(ticket);
+                ticketDAO.saveTicket(ticket);
 
-            System.out.println("Generated Ticket and saved in DB");
-            System.out.println("Please park your vehicle in spot number:" + parkingSpot.getId());
-            System.out
-                    .println("Recorded in-time for vehicle number:" + vehicleRegNumber + " is: "
-                            + LocalDateTime.ofEpochSecond(inTime, 0, ZoneOffset.UTC).format(dateTimeFormatter));
+                System.out.println("Generated Ticket and saved in DB");
+                System.out.println("Please park your vehicle in spot number:" + parkingSpot.getId());
+                System.out
+                        .println("Recorded in-time for vehicle number:" + vehicleRegNumber + " is: "
+                                + LocalDateTime.ofEpochSecond(inTime, 0, ZoneOffset.UTC).format(dateTimeFormatter));
+            } else {
 
-        } catch (Exception e) {
+                System.out.println("Error fetching parking number from DB. Parking slots might be full");
+            }
+
+        } catch (RuntimeException e) {
+
             logger.error("Unable to process incoming vehicle", e);
         }
     }
@@ -111,12 +118,13 @@ public class ParkingServiceImpl implements ParkingService {
      * and wait for positive response if spot is available.
      *  In that case <class>ParkingSpot</class> is created with number of the free parking spot, vehicle type and boolean
      * parameter indicating availability (initially true) and returned to the invoking method.
-     *  In case response is negative exception is thrown with appropriate message.
+     *  In case response is negative returns flag static instance NOT_AVAILABLE.
      * <p>
      *  This is helper method with no need for public access. It is public for the sole reason of implementing @Spy
      * function when testing as the project is focused on testing an application.
      *
-     * @return valid ParkingSpot instance, never null
+     * @return <class>ParkingSpot</class> instance, when no available places exist, returns flag static
+     * instance NOT_AVAILABLE, never null
      */
     public ParkingSpot getNextParkingNumberIfAvailable() {
 
@@ -132,8 +140,7 @@ public class ParkingServiceImpl implements ParkingService {
 
         } else {
 
-            logger.error("Error fetching next available parking slot");
-            throw new IllegalArgumentException("Error fetching parking number from DB. Parking slots might be full");
+            parkingSpot = ParkingSpot.NOT_AVAILABLE;
         }
 
         return parkingSpot;
@@ -157,18 +164,18 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     /**
-     *  Method handles exiting vehicle through acquiring a ticket from the database and updating its out-time and price
+     *   Method handles exiting vehicle through acquiring a ticket from the database and updating its out-time and price
      * and updating the occupied parking slot availability to true. Ticket and parking spot database tables are then
-     * updated and result is printed on the console. All input and database related exceptions are
-     * handled internally and caught in global try catch block with appropriate messages printed to the console.
-     *
+     * updated and the result is printed on the console.
+     * <p>
+     *  All input and database related exceptions are handled internally and caught in global try catch block with
+     * appropriate messages printed to the console.
      */
     public void processExitingVehicle() {
         try {
             String vehicleRegNumber = getVehicleRegNumber();
 
-            Ticket ticket = ticketDAO.getTicket(vehicleRegNumber)
-                    .orElseThrow(() -> new IllegalArgumentException("Error creating ticket"));
+            Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
 
             ticket.setOutTime(timeUtil.getTimeInSeconds());
 
@@ -181,19 +188,17 @@ public class ParkingServiceImpl implements ParkingService {
 
             parkingSpot.setAvailable(true);
 
-            if (parkingSpotDAO.updateParking(parkingSpot)) {
+            parkingSpotDAO.updateParking(parkingSpot);
 
-                DecimalFormat df = new DecimalFormat("#.##");
+            DecimalFormat df = new DecimalFormat("#.##");
 
-                System.out.println("Please pay the parking fare: " + df.format(ticket.getPrice()) + "€");
-                System.out.println("Recorded out-time for vehicle number: " + ticket.getVehicleRegNumber() + " is: "
-                        + LocalDateTime.ofEpochSecond(ticket.getOutTime(), 0, ZoneOffset.UTC)
-                        .format(dateTimeFormatter));
+            System.out.println("Please pay the parking fare: " + df.format(ticket.getPrice()) + "€");
+            System.out.println("Recorded out-time for vehicle number: " + ticket.getVehicleRegNumber() + " is: "
+                    + LocalDateTime.ofEpochSecond(ticket.getOutTime(), 0, ZoneOffset.UTC)
+                    .format(dateTimeFormatter));
 
-            } else throw new IllegalArgumentException("Error updating parking");
+        } catch (RuntimeException e) {
 
-
-        } catch (Exception e) {
             logger.error("Unable to process exiting vehicle", e);
         }
     }

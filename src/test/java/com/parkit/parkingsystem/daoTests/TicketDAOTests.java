@@ -175,7 +175,8 @@ public class TicketDAOTests {
             when(timestamp.getTime()).thenReturn(1000L);
 
             //act
-            Ticket ticketNew = ticketDAO.getTicket("ABCDEF").orElseThrow(IllegalArgumentException::new);
+            Ticket ticketNew = ticketDAO.getTicket("ABCDEF");
+//                    .orElseThrow(IllegalArgumentException::new);
 
             //assert
             Assertions.assertEquals(ticket.getId(), ticketNew.getId());

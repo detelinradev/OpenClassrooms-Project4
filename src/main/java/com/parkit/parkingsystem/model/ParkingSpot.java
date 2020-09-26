@@ -3,6 +3,9 @@ package com.parkit.parkingsystem.model;
 import com.parkit.parkingsystem.constants.ParkingType;
 
 public class ParkingSpot {
+
+    public static ParkingSpot NOT_AVAILABLE = new ParkingSpot(-1,ParkingType.CAR,false);
+
     private int number;
     private ParkingType parkingType;
     private boolean isAvailable;

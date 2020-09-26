@@ -4,6 +4,7 @@ import com.parkit.parkingsystem.config.contracts.DataBaseConfig;
 import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
+import com.parkit.parkingsystem.exception.UnsuccessfulOperationException;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.logging.log4j.LogManager;
@@ -18,7 +19,7 @@ public class ParkingSpotDAOImpl implements ParkingSpotDAO {
 
     private static final Logger logger = LogManager.getLogger("ParkingSpotDAO");
 
-    public DataBaseConfig dataBaseConfig;
+    public final DataBaseConfig dataBaseConfig;
 
     public ParkingSpotDAOImpl(DataBaseConfig dataBaseConfig) {
         this.dataBaseConfig = dataBaseConfig;
@@ -27,7 +28,6 @@ public class ParkingSpotDAOImpl implements ParkingSpotDAO {
     @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     public int getNextAvailableSlot(ParkingType parkingType) {
 
-        int result = -1;
         ResultSet rs = null;
 
         try(Connection con = dataBaseConfig.getConnection();
@@ -38,20 +38,22 @@ public class ParkingSpotDAOImpl implements ParkingSpotDAO {
 
             if (rs.next()) {
 
-                result = rs.getInt(1);
+                return rs.getInt(1);
+
+            }else{
+
+                return -1;
             }
 
         } catch (ClassNotFoundException | SQLException ex) {
 
             logger.error("Error fetching next available slot", ex);
-            throw new IllegalArgumentException("Unable to fetch next available slot");
+            throw new UnsuccessfulOperationException("Unable to fetch next available slot",ex);
 
         } finally {
 
             dataBaseConfig.closeResultSet(rs);
         }
-
-        return result;
     }
 
     @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
@@ -65,12 +67,20 @@ public class ParkingSpotDAOImpl implements ParkingSpotDAO {
 
             int updateRowCount = ps.executeUpdate();
 
-            return (updateRowCount == 1);
+            if (updateRowCount == 1){
+
+                return true;
+
+            }else {
+
+                throw new UnsuccessfulOperationException("Unable to update parking spot due to wrong count of " +
+                        "rows for SQL Data Manipulation Language statements");
+            }
 
         } catch (ClassNotFoundException | SQLException ex) {
 
             logger.error("Error updating parking info", ex);
-            throw new IllegalArgumentException("Unable to update parking spot");
+            throw new UnsuccessfulOperationException("Unable to update parking spot",ex);
         }
     }
 }
