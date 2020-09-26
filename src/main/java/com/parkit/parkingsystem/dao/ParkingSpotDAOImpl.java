@@ -57,7 +57,6 @@ public class ParkingSpotDAOImpl implements ParkingSpotDAO {
     @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     public boolean updateParking(ParkingSpot parkingSpot) {
 
-        // update the availability for that parking slot
         try(Connection con = dataBaseConfig.getConnection();
             PreparedStatement ps = con.prepareStatement(DBConstants.UPDATE_PARKING_SPOT)) {
 
