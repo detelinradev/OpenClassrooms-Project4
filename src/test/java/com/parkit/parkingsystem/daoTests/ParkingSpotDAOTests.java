@@ -5,6 +5,7 @@ import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAOImpl;
 import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
+import com.parkit.parkingsystem.exception.UnsuccessfulOperationException;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
@@ -106,7 +107,7 @@ public class ParkingSpotDAOTests {
             when(dataBaseConfig.getConnection()).thenThrow(ClassNotFoundException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class,
+            Assertions.assertThrows(UnsuccessfulOperationException.class,
                     () -> parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(dataBaseConfig, times(1)).closeResultSet(null);
@@ -123,7 +124,7 @@ public class ParkingSpotDAOTests {
             when(preparedStatement.executeQuery()).thenThrow(SQLException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class,
+            Assertions.assertThrows(UnsuccessfulOperationException.class,
                     () -> parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(dataBaseConfig, times(1)).closeResultSet(null);
@@ -144,7 +145,7 @@ public class ParkingSpotDAOTests {
             when(connection.prepareStatement(DBConstants.GET_NEXT_PARKING_SPOT)).thenThrow(SQLException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class,
+            Assertions.assertThrows(UnsuccessfulOperationException.class,
                     () -> parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(dataBaseConfig, times(1)).closeResultSet(null);
@@ -164,7 +165,7 @@ public class ParkingSpotDAOTests {
             when(resultSet.next()).thenThrow(SQLException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class,
+            Assertions.assertThrows(UnsuccessfulOperationException.class,
                     () -> parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(dataBaseConfig, times(1)).closeResultSet(resultSet);
@@ -229,7 +230,7 @@ public class ParkingSpotDAOTests {
             when(dataBaseConfig.getConnection()).thenThrow(ClassNotFoundException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, () -> parkingSpotDAO.updateParking(parkingSpot));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> parkingSpotDAO.updateParking(parkingSpot));
             verify(dataBaseConfig, times(1)).getConnection();
             verifyNoMoreInteractions(dataBaseConfig, connection);
         }
@@ -242,7 +243,7 @@ public class ParkingSpotDAOTests {
             when(connection.prepareStatement(DBConstants.UPDATE_PARKING_SPOT)).thenThrow(SQLException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, () -> parkingSpotDAO.updateParking(parkingSpot));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> parkingSpotDAO.updateParking(parkingSpot));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(connection, times(1)).prepareStatement(DBConstants.UPDATE_PARKING_SPOT);
             verify(connection, times(1)).close();
@@ -259,7 +260,7 @@ public class ParkingSpotDAOTests {
             when(preparedStatement.executeUpdate()).thenReturn(0);
 
             //act & assert
-            Assertions.assertFalse(parkingSpotDAO.updateParking(parkingSpot));
+            Assertions.assertThrows(UnsuccessfulOperationException.class,()-> parkingSpotDAO.updateParking(parkingSpot));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(connection, times(1)).prepareStatement(DBConstants.UPDATE_PARKING_SPOT);
             verify(connection, times(1)).close();
@@ -276,7 +277,7 @@ public class ParkingSpotDAOTests {
             when(preparedStatement.executeUpdate()).thenThrow(SQLException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, () -> parkingSpotDAO.updateParking(parkingSpot));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> parkingSpotDAO.updateParking(parkingSpot));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(connection, times(1)).prepareStatement(DBConstants.UPDATE_PARKING_SPOT);
             verify(connection, times(1)).close();

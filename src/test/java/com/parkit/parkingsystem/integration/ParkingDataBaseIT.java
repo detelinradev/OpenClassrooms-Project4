@@ -6,6 +6,7 @@ import com.parkit.parkingsystem.constants.DiscountType;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAOImpl;
 import com.parkit.parkingsystem.dao.TicketDAOImpl;
+import com.parkit.parkingsystem.exception.UnsuccessfulOperationException;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorServiceImpl;
 import com.parkit.parkingsystem.service.contracts.FareCalculatorService;
@@ -59,7 +60,7 @@ public class ParkingDataBaseIT {
     }
 
     @AfterEach
-    private void cleanAfterTest(){
+    private void cleanAfterTest() {
         dataBasePrepareService.clearDataBaseEntries();
     }
 
@@ -74,7 +75,7 @@ public class ParkingDataBaseIT {
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(inputReaderUtil.readSelection()).thenReturn(1);
-        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) -3000);
+        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - 3000);
 
 
         //act
@@ -112,7 +113,7 @@ public class ParkingDataBaseIT {
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(inputReaderUtil.readSelection()).thenReturn(2);
-        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) -3000);
+        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - 3000);
 
         //act
         parkingService.processIncomingVehicle();
@@ -124,7 +125,7 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void exitingBike_Should_CreateAPriceAndOutTime_When_CorrectParametersPassed(){
+    public void exitingBike_Should_CreateAPriceAndOutTime_When_CorrectParametersPassed() {
 
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
@@ -153,7 +154,7 @@ public class ParkingDataBaseIT {
         parkingService.processIncomingVehicle();
 
         //assert
-        Assertions.assertEquals(Optional.empty() ,ticketDAO.getTicket("ABCDEF"));
+        Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.getTicket("ABCDEF"));
 
     }
 
@@ -163,7 +164,7 @@ public class ParkingDataBaseIT {
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(inputReaderUtil.readSelection()).thenReturn(1);
-        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) -300);
+        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - 300);
 
         //act
         parkingService.processIncomingVehicle();
@@ -190,7 +191,7 @@ public class ParkingDataBaseIT {
 
         //assert
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
-        Assertions.assertEquals(0.0,ticket.getPrice());
+        Assertions.assertEquals(0.0, ticket.getPrice());
         Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
@@ -220,7 +221,7 @@ public class ParkingDataBaseIT {
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         when(inputReaderUtil.readSelection()).thenReturn(2);
-        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) -300);
+        when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC) - 300);
 
         //act
         parkingService.processIncomingVehicle();
@@ -247,7 +248,7 @@ public class ParkingDataBaseIT {
 
         //assert
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
-        Assertions.assertEquals(0.0,ticket.getPrice());
+        Assertions.assertEquals(0.0, ticket.getPrice());
         Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
@@ -290,7 +291,7 @@ public class ParkingDataBaseIT {
 
         //assert
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
-        Assertions.assertEquals(0.0,ticket.getPrice());
+        Assertions.assertEquals(0.0, ticket.getPrice());
         Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
@@ -336,7 +337,7 @@ public class ParkingDataBaseIT {
 
         //assert
         Ticket ticket = ticketDAO.getTicket("ABCDEF");
-        Assertions.assertEquals(0.0,ticket.getPrice());
+        Assertions.assertEquals(0.0, ticket.getPrice());
         Assertions.assertTrue(ticket.getOutTime() > 0);
     }
 
@@ -387,7 +388,7 @@ public class ParkingDataBaseIT {
     }
 
     @Test
-    public void exitingBike_Should_CreateAPriceAndOutTime_When_CorrectParametersPassedAndDiscountTypeNODISCOUNTAndRECURRINGUSER5PERCENT(){
+    public void exitingBike_Should_CreateAPriceAndOutTime_When_CorrectParametersPassedAndDiscountTypeNODISCOUNTAndRECURRINGUSER5PERCENT() {
 
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");

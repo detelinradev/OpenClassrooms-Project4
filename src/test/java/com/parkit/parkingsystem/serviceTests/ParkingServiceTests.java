@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 import com.parkit.parkingsystem.constants.DiscountType;
+import com.parkit.parkingsystem.exception.UnsuccessfulOperationException;
 import com.parkit.parkingsystem.service.ParkingServiceImpl;
 import com.parkit.parkingsystem.service.contracts.FareCalculatorService;
 import com.parkit.parkingsystem.util.contracts.TimeUtil;
@@ -231,7 +232,7 @@ public class ParkingServiceTests {
             when(parkingSpotDAO.getNextAvailableSlot(ParkingType.CAR)).thenReturn(-1);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, parkingService::getNextParkingNumberIfAvailable);
+            Assertions.assertEquals(ParkingSpot.NOT_AVAILABLE, parkingService.getNextParkingNumberIfAvailable());
         }
     }
 

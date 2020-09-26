@@ -5,6 +5,7 @@ import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.TicketDAOImpl;
 import com.parkit.parkingsystem.dao.contracts.TicketDAO;
+import com.parkit.parkingsystem.exception.UnsuccessfulOperationException;
 import com.parkit.parkingsystem.integration.config.DataBaseTestConfig;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
@@ -82,7 +83,7 @@ public class TicketDAOTests {
             //arrange
             when(dataBaseConfig.getConnection()).thenReturn(connection);
             when(connection.prepareStatement(DBConstants.SAVE_TICKET)).thenReturn(preparedStatement);
-            when(preparedStatement.execute()).thenReturn(true);
+            when(preparedStatement.executeUpdate()).thenReturn(1);
 
             //act & assert
             Assertions.assertTrue(ticketDAO.saveTicket(ticket));
@@ -99,7 +100,7 @@ public class TicketDAOTests {
             when(dataBaseConfig.getConnection()).thenThrow(ClassNotFoundException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, () -> ticketDAO.saveTicket(ticket));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.saveTicket(ticket));
             verify(dataBaseConfig, times(1)).getConnection();
             verifyNoMoreInteractions(dataBaseConfig, connection);
         }
@@ -112,7 +113,7 @@ public class TicketDAOTests {
             when(connection.prepareStatement(DBConstants.SAVE_TICKET)).thenThrow(SQLException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, () -> ticketDAO.saveTicket(ticket));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.saveTicket(ticket));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(connection, times(1)).prepareStatement(DBConstants.SAVE_TICKET);
             verify(connection, times(1)).close();
@@ -125,10 +126,10 @@ public class TicketDAOTests {
             //arrange
             when(dataBaseConfig.getConnection()).thenReturn(connection);
             when(connection.prepareStatement(DBConstants.SAVE_TICKET)).thenReturn(preparedStatement);
-            when(preparedStatement.execute()).thenReturn(false);
+            when(preparedStatement.executeUpdate()).thenReturn(0);
 
             //act & assert
-            Assertions.assertFalse(ticketDAO.saveTicket(ticket));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.saveTicket(ticket));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(connection, times(1)).prepareStatement(DBConstants.SAVE_TICKET);
             verify(connection, times(1)).close();
@@ -141,10 +142,10 @@ public class TicketDAOTests {
             //arrange
             when(dataBaseConfig.getConnection()).thenReturn(connection);
             when(connection.prepareStatement(DBConstants.SAVE_TICKET)).thenReturn(preparedStatement);
-            when(preparedStatement.execute()).thenThrow(SQLException.class);
+            when(preparedStatement.executeUpdate()).thenThrow(SQLException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, () -> ticketDAO.saveTicket(ticket));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.saveTicket(ticket));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(connection, times(1)).prepareStatement(DBConstants.SAVE_TICKET);
             verify(connection, times(1)).close();
@@ -203,7 +204,7 @@ public class TicketDAOTests {
             when(dataBaseConfig.getConnection()).thenThrow(ClassNotFoundException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, () -> ticketDAO.getTicket("ABCDEF"));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.getTicket("ABCDEF"));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(dataBaseConfig, times(1)).closeResultSet(null);
             verifyNoMoreInteractions(dataBaseConfig, connection, preparedStatement);
@@ -219,7 +220,7 @@ public class TicketDAOTests {
             when(preparedStatement.executeQuery()).thenThrow(SQLException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, () -> ticketDAO.getTicket("ABCDEF"));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.getTicket("ABCDEF"));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(dataBaseConfig, times(1)).closeResultSet(null);
             verify(connection, times(1)).prepareStatement(DBConstants.GET_TICKET);
@@ -239,7 +240,7 @@ public class TicketDAOTests {
             when(connection.prepareStatement(DBConstants.GET_TICKET)).thenThrow(SQLException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, () -> ticketDAO.getTicket("ABCDEF"));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.getTicket("ABCDEF"));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(dataBaseConfig, times(1)).closeResultSet(null);
             verify(connection, times(1)).prepareStatement(DBConstants.GET_TICKET);
@@ -258,7 +259,7 @@ public class TicketDAOTests {
             when(resultSet.next()).thenThrow(SQLException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, () -> ticketDAO.getTicket("ABCDEF"));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.getTicket("ABCDEF"));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(dataBaseConfig, times(1)).closeResultSet(resultSet);
             verify(connection, times(1)).prepareStatement(DBConstants.GET_TICKET);
@@ -280,7 +281,7 @@ public class TicketDAOTests {
             when(resultSet.next()).thenReturn(false);
 
             //act & assert
-            Assertions.assertEquals(Optional.empty() ,ticketDAO.getTicket("ABCDEF"));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.getTicket("ABCDEF"));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(dataBaseConfig, times(1)).closeResultSet(resultSet);
             verify(connection, times(1)).prepareStatement(DBConstants.GET_TICKET);
@@ -303,7 +304,7 @@ public class TicketDAOTests {
             //arrange
             when(dataBaseConfig.getConnection()).thenReturn(connection);
             when(connection.prepareStatement(DBConstants.UPDATE_TICKET)).thenReturn(preparedStatement);
-            when(preparedStatement.execute()).thenReturn(true);
+            when(preparedStatement.executeUpdate()).thenReturn(1);
 
             //act & assert
             Assertions.assertTrue(ticketDAO.updateTicket(ticket));
@@ -321,7 +322,7 @@ public class TicketDAOTests {
             when(dataBaseConfig.getConnection()).thenThrow(ClassNotFoundException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, () -> ticketDAO.updateTicket(ticket));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.updateTicket(ticket));
             verify(dataBaseConfig, times(1)).getConnection();
             verifyNoMoreInteractions(dataBaseConfig, connection);
         }
@@ -334,7 +335,7 @@ public class TicketDAOTests {
             when(connection.prepareStatement(DBConstants.UPDATE_TICKET)).thenThrow(SQLException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, () -> ticketDAO.updateTicket(ticket));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.updateTicket(ticket));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(connection, times(1)).prepareStatement(DBConstants.UPDATE_TICKET);
             verify(connection, times(1)).close();
@@ -347,10 +348,10 @@ public class TicketDAOTests {
             //arrange
             when(dataBaseConfig.getConnection()).thenReturn(connection);
             when(connection.prepareStatement(DBConstants.UPDATE_TICKET)).thenReturn(preparedStatement);
-            when(preparedStatement.execute()).thenReturn(false);
+            when(preparedStatement.executeUpdate()).thenReturn(0);
 
             //act & assert
-            Assertions.assertFalse(ticketDAO.updateTicket(ticket));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.updateTicket(ticket));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(connection, times(1)).prepareStatement(DBConstants.UPDATE_TICKET);
             verify(connection, times(1)).close();
@@ -363,10 +364,10 @@ public class TicketDAOTests {
             //arrange
             when(dataBaseConfig.getConnection()).thenReturn(connection);
             when(connection.prepareStatement(DBConstants.UPDATE_TICKET)).thenReturn(preparedStatement);
-            when(preparedStatement.execute()).thenThrow(SQLException.class);
+            when(preparedStatement.executeUpdate()).thenThrow(SQLException.class);
 
             //act & assert
-            Assertions.assertThrows(IllegalArgumentException.class, () -> ticketDAO.updateTicket(ticket));
+            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.updateTicket(ticket));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(connection, times(1)).prepareStatement(DBConstants.UPDATE_TICKET);
             verify(connection, times(1)).close();
