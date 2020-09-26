@@ -6,6 +6,7 @@ import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.contracts.TicketDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -24,6 +25,7 @@ public class TicketDAOImpl implements TicketDAO {
         this.dataBaseConfig = dataBaseConfig;
     }
 
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     public boolean saveTicket(Ticket ticket) {
 
         try(Connection con = dataBaseConfig.getConnection();
@@ -47,6 +49,7 @@ public class TicketDAOImpl implements TicketDAO {
         }
     }
 
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     public Optional<Ticket> getTicket(String vehicleRegNumber) {
 
         Ticket ticket = null;
@@ -86,6 +89,7 @@ public class TicketDAOImpl implements TicketDAO {
         return Optional.ofNullable(ticket);
     }
 
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     public boolean updateTicket(Ticket ticket) {
 
         try(Connection con = dataBaseConfig.getConnection();

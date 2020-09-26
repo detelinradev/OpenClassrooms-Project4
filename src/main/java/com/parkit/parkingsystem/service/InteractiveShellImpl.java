@@ -23,7 +23,7 @@ import java.util.Arrays;
  *  It consists of a method loadInterface where the main menu is loaded and user can make choice of several actions.
  *  It holds FareCalculatorService variable what is used to create dependency with price calculating function of the app
  * in order to apply various discounts at runtime.
- *  It holds hard dependencies to all parts of the application in order to provide the parking functionality.
+ *  It instantiate with hard dependencies all parts of the application in order to provide the parking functionality.
  *
  *  @author Detelin Radev
  */

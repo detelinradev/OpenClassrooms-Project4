@@ -5,6 +5,7 @@ import com.parkit.parkingsystem.constants.DBConstants;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
 import com.parkit.parkingsystem.model.ParkingSpot;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -23,6 +24,7 @@ public class ParkingSpotDAOImpl implements ParkingSpotDAO {
         this.dataBaseConfig = dataBaseConfig;
     }
 
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     public int getNextAvailableSlot(ParkingType parkingType) {
 
         int result = -1;
@@ -52,6 +54,7 @@ public class ParkingSpotDAOImpl implements ParkingSpotDAO {
         return result;
     }
 
+    @SuppressFBWarnings("RCN_REDUNDANT_NULLCHECK_WOULD_HAVE_BEEN_A_NPE")
     public boolean updateParking(ParkingSpot parkingSpot) {
 
         // update the availability for that parking slot
