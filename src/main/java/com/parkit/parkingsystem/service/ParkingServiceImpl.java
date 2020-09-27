@@ -70,6 +70,7 @@ public class ParkingServiceImpl implements ParkingService {
      *  All input and database related exceptions are handled internally and caught in global try catch block with
      * appropriate messages printed to the console.
      */
+    @Override
     public void processIncomingVehicle() {
         try {
             ParkingSpot parkingSpot = getNextParkingNumberIfAvailable();
@@ -126,6 +127,7 @@ public class ParkingServiceImpl implements ParkingService {
      * @return <class>ParkingSpot</class> instance, when no available places exist, returns flag static
      * instance NOT_AVAILABLE, never null
      */
+    @Override
     public ParkingSpot getNextParkingNumberIfAvailable() {
 
         int parkingNumber;
@@ -166,11 +168,12 @@ public class ParkingServiceImpl implements ParkingService {
     /**
      *   Method handles exiting vehicle through acquiring a ticket from the database and updating its out-time and price
      * and updating the occupied parking slot availability to true. Ticket and parking spot database tables are then
-     * updated and the result is printed on the console.
+     * updated with the result, and it is is printed on the console.
      * <p>
      *  All input and database related exceptions are handled internally and caught in global try catch block with
      * appropriate messages printed to the console.
      */
+    @Override
     public void processExitingVehicle() {
         try {
             String vehicleRegNumber = getVehicleRegNumber();

@@ -55,6 +55,7 @@ public class InteractiveShellImpl implements InteractiveShell {
      * message. One of the enum commands brake the loop when chosen.
      *
      */
+    @Override
     public void loadInterface() {
 
         logger.info("App initialized!!!");
