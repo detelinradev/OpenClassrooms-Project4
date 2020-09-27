@@ -7,8 +7,8 @@ package com.parkit.parkingsystem.service.contracts;
  * and user can make choice of several actions.
  * <p>
  *     Holds FareCalculatorService variable what is used to create
- * dependency with price calculating function of the app in order to apply
- * various discounts at runtime.
+ * dependency through constructor injection with price calculating function
+ * of the app in order to apply various discounts at runtime.
  * <p>
  *     Instantiate with hard dependencies all parts of the application in
  * order to provide the parking functionality.

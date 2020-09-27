@@ -14,8 +14,8 @@ import com.parkit.parkingsystem.model.ParkingSpot;
  * <p>
  *     Holds <class>FareCalculatorService</class>, <class>InputReaderUtil</class>,
  * <class>ParkingSpotDAO</class>, <class>TicketDAO</class> and <class>TimeUtil</class>
- * variables which are used to create dependency with different parts of the
- * app in order to apply various operations.
+ * variables which are used to create dependencies through constructor injection
+ * with different parts of the app in order to apply various operations.
  *
  */
 public interface ParkingService {

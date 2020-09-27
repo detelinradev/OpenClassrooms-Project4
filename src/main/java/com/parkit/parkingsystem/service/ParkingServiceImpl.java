@@ -33,7 +33,7 @@ public class ParkingServiceImpl implements ParkingService {
     /**
      *     Stores <class>FareCalculatorService</class>, <class>InputReaderUtil</class>,
      * <class>ParkingSpotDAO</class>, <class>TicketDAO</class> and
-     * <class>TimeUtil</class> variables and creates instance of
+     * <class>TimeUtil</class> variables passed as parameters and creates instance of
      * <class>ParkingServiceImpl</class>
      *
      * @param fareCalculatorService dependency variable presenting  price
