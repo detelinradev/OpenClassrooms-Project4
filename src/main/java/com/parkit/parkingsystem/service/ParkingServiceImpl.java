@@ -20,17 +20,20 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 
 /**
- *   The <class>ParkingService</class> class is the service of the application, where all stages to successfully park
- * a vehicle are performed with interaction between user input, business related logic and database operations.
+ *     Service of the application, where all stages to successfully park a
+ * vehicle are performed with interaction between user input, business
+ * related logic and database operations.
  * <p>
- *  It consists of a methods processIncomingVehicle, processExitingVehicle and getNextParkingNumberIfAvailable where
- * vehicle is processed as incoming or outgoing and supportive messages are printed to the console.
+ *     Consists of a methods <class>processIncomingVehicle</class>,
+ * <class>processExitingVehicle</class> and <class>getNextParkingNumberIfAvailable</class>
+ * where vehicle is processed as incoming or outgoing and supportive messages
+ * are printed to the console.
  * <p>
- *  It holds <class>FareCalculatorService</class>, <class>InputReaderUtil</class>, <class>ParkingSpotDAO</class>,
- * <class>TicketDAO</class> and <class>TimeUtil</class> variables which are used to create dependency with different
- * parts of the app in order to apply various operations.
+ *     Holds <class>FareCalculatorService</class>, <class>InputReaderUtil</class>,
+ * <class>ParkingSpotDAO</class>, <class>TicketDAO</class> and <class>TimeUtil</class>
+ * variables which are used to create dependency with different parts of the
+ * app in order to apply various operations.
  *
- * @author Detelin Radev
  */
 public class ParkingServiceImpl implements ParkingService {
 
@@ -44,14 +47,21 @@ public class ParkingServiceImpl implements ParkingService {
     private final FareCalculatorService fareCalculatorService;
 
     /**
-     *   This constructor stores <class>FareCalculatorService</class>, <class>InputReaderUtil</class>, <class>ParkingSpotDAO</class>,
-     * <class>TicketDAO</class> and <class>TimeUtil</class> variables and creates instance of ParkingServiceImpl
+     *     Stores <class>FareCalculatorService</class>, <class>InputReaderUtil</class>,
+     * <class>ParkingSpotDAO</class>, <class>TicketDAO</class> and
+     * <class>TimeUtil</class> variables and creates instance of
+     * <class>ParkingServiceImpl</class>
      *
-     * @param fareCalculatorService dependency variable presenting  price calculating function of the app
-     * @param inputReaderUtil       dependency variable presenting  input reading function of the app
-     * @param parkingSpotDAO        dependency variable presenting  parking spot handling function of the app
-     * @param ticketDAO             dependency variable presenting  ticket handling function of the app
-     * @param timeUtil              dependency variable presenting  time handling function of the app
+     * @param fareCalculatorService dependency variable presenting  price
+     *                             calculating function of the app
+     * @param inputReaderUtil       dependency variable presenting  input
+     *                             reading function of the app
+     * @param parkingSpotDAO        dependency variable presenting  parking
+     *                             spot handling function of the app
+     * @param ticketDAO             dependency variable presenting  ticket
+     *                             handling function of the app
+     * @param timeUtil              dependency variable presenting  time
+     *                             handling function of the app
      */
     public ParkingServiceImpl(InputReaderUtil inputReaderUtil, ParkingSpotDAO parkingSpotDAO, TicketDAO ticketDAO, TimeUtil timeUtil,
                               FareCalculatorService fareCalculatorService) {
@@ -63,12 +73,14 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     /**
-     *   Method handles incoming vehicle through acquiring valid parking spot from the database and issuing a ticket for
-     * parking the vehicle with user provided details. Ticket is then saved in the database and result is printed on the
-     * console.
+     *     Handles incoming vehicle through acquiring valid parking spot from
+     * the database and issuing a ticket for parking the vehicle with user
+     * provided details. Ticket is then saved in the database and result is
+     * printed on the console.
      * <p>
-     *  All input and database related exceptions are handled internally and caught in global try catch block with
-     * appropriate messages printed to the console.
+     *     All input and database related exceptions are handled internally and
+     * caught in global try catch block with appropriate messages printed to
+     * the console.
      */
     @Override
     public void processIncomingVehicle() {
@@ -115,17 +127,20 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     /**
-     *   Method acquires a valid parking spot for incoming vehicle, through passing the type of the vehicle to the database
-     * and wait for positive response if spot is available.
-     *  In that case <class>ParkingSpot</class> is created with number of the free parking spot, vehicle type and boolean
-     * parameter indicating availability (initially true) and returned to the invoking method.
-     *  In case response is negative returns flag static instance NOT_AVAILABLE.
+     *     Acquires a valid parking spot for incoming vehicle, through passing
+     * the type of the vehicle to the database and wait for positive response
+     * if spot is available. In that case <class>ParkingSpot</class> is created
+     * with the acquired number of the free parking spot, vehicle type and
+     * boolean parameter indicating availability (initially true) and returned
+     * to the invoking method. In case response is negative returns flag static
+     * instance NOT_AVAILABLE.
      * <p>
-     *  This is helper method with no need for public access. It is public for the sole reason of implementing @Spy
-     * function when testing as the project is focused on testing an application.
+     *  This is helper method with no need for public access. It is public for
+     *  the sole reason of implementing @Spy function when testing as the
+     *  project is focused on testing an application.
      *
-     * @return <class>ParkingSpot</class> instance, when no available places exist, returns flag static
-     * instance NOT_AVAILABLE, never null
+     * @return <class>ParkingSpot</class> instance, when no available places
+     * exist, returns flag static instance NOT_AVAILABLE, never null
      */
     @Override
     public ParkingSpot getNextParkingNumberIfAvailable() {
@@ -166,12 +181,14 @@ public class ParkingServiceImpl implements ParkingService {
     }
 
     /**
-     *   Method handles exiting vehicle through acquiring a ticket from the database and updating its out-time and price
-     * and updating the occupied parking slot availability to true. Ticket and parking spot database tables are then
-     * updated with the result, and it is is printed on the console.
+     *     Handles exiting vehicle through acquiring a ticket from the database
+     * and updating its out-time and price and updating the occupied parking
+     * slot availability to true. Ticket and parking spot database tables are
+     * then updated with the result, and it is is printed on the console.
      * <p>
-     *  All input and database related exceptions are handled internally and caught in global try catch block with
-     * appropriate messages printed to the console.
+     *     All input and database related exceptions are handled internally and
+     * caught in global try catch block with appropriate messages printed to
+     * the console.
      */
     @Override
     public void processExitingVehicle() {

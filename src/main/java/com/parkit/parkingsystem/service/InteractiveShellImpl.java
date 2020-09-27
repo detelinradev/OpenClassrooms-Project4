@@ -19,13 +19,18 @@ import org.apache.logging.log4j.Logger;
 import java.util.Arrays;
 
 /**
- *   The InteractiveShell class is the mediator shell between the user and the application.
- *  It consists of a method loadInterface where the main menu is loaded and user can make choice of several actions.
- *  It holds FareCalculatorService variable what is used to create dependency with price calculating function of the app
- * in order to apply various discounts at runtime.
- *  It instantiate with hard dependencies all parts of the application in order to provide the parking functionality.
+ *     The mediator shell between the user and the application.
+ * <p>
+ *     Consists of a method loadInterface where the main menu is loaded
+ * and user can make choice of several actions.
+ * <p>
+ *     Holds FareCalculatorService variable what is used to create
+ * dependency with price calculating function of the app in order to apply
+ * various discounts at runtime.
+ * <p>
+ *     Instantiate with hard dependencies all parts of the application in
+ * order to provide the parking functionality.
  *
- *  @author Detelin Radev
  */
 public class InteractiveShellImpl implements InteractiveShell {
 
@@ -39,9 +44,11 @@ public class InteractiveShellImpl implements InteractiveShell {
 
 
     /**
-     * This constructor stores FareCalculatorService variable and creates instance of InteractiveShellImpl
+     * Stores FareCalculatorService variable and creates instance of
+     * InteractiveShellImpl
      *
-     * @param fareCalculatorService dependency variable presenting  price calculating function of the app
+     * @param fareCalculatorService dependency variable presenting  price
+     *                             calculating function of the app
      */
     public InteractiveShellImpl(FareCalculatorService fareCalculatorService) {
 
@@ -50,9 +57,10 @@ public class InteractiveShellImpl implements InteractiveShell {
     }
 
     /**
-     *  The main menu is loaded in the method through loop and user can make choice of several actions presented
-     * as enum types and iterated with stream. If no valid action is chosen specific enum is loaded which prints appropriate
-     * message. One of the enum commands brake the loop when chosen.
+     *     The main menu is loaded in the method through loop and user can make
+     * choice of several actions presented as enum types and iterated with
+     * stream. If no valid action is chosen specific enum is loaded which prints
+     * appropriate message. One of the enum commands brake the loop when chosen.
      *
      */
     @Override
