@@ -7,11 +7,13 @@ import java.time.ZoneOffset;
 
 public class TimeUtilImpl implements TimeUtil {
 
-    public LocalDateTime getTime(){
-    return LocalDateTime.now();
-}
+    public LocalDateTime getTime() {
 
-    public long getTimeInSeconds(){
+        return LocalDateTime.now(ZoneOffset.UTC);
+    }
+
+    public long getTimeInSeconds() {
+
         return LocalDateTime.now().toEpochSecond(ZoneOffset.UTC);
     }
 }
