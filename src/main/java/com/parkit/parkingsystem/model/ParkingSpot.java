@@ -3,7 +3,7 @@ package com.parkit.parkingsystem.model;
 import com.parkit.parkingsystem.constants.ParkingType;
 
 /**
- * The class <code>ParkingSpot</code> represents data about a spot in the
+ * The class <code>ParkingSpot</code> represents the data about a spot in the
  * parking acquired from database table <code>Parking</code> bearing information
  * about vehicle type it can hold, is it available and which number the spot is
  * in the database.
@@ -14,6 +14,8 @@ import com.parkit.parkingsystem.constants.ParkingType;
  *     <code>equals</code> and <code>hashCode</code> methods are overridden to
  * compare and calculate only <code>number</code> field of this
  * <code>ParkingSpot</code>
+ * <code>toString</code> method is overridden to
+ * includes all fields and their values for this <code>ParkingSpot</code>.
  */
 public class ParkingSpot {
 
@@ -118,5 +120,21 @@ public class ParkingSpot {
     @Override
     public int hashCode() {
         return number;
+    }
+
+    /**
+     * Returns a string representation of the object.
+     * Overrides <code>toString</code> method from <code>Object</code> with
+     * concatenated names and values as string of all fields of this
+     * <code>ParkingSpot</code> .
+     * @return a string representation of the object
+     */
+    @Override
+    public String toString() {
+        return "ParkingSpot{" +
+                "number=" + number +
+                ", parkingType=" + parkingType +
+                ", isAvailable=" + isAvailable +
+                '}';
     }
 }
