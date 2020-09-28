@@ -7,17 +7,21 @@ import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
 
+
 public class DataBaseConfigImpl implements DataBaseConfig {
 
     private static final Logger logger = LogManager.getLogger("DataBaseConfig");
 
     @SuppressFBWarnings("DMI_CONSTANT_DB_PASSWORD")
+    @Override
     public Connection getConnection() throws ClassNotFoundException, SQLException {
         logger.info("Create DB connection");
         Class.forName("com.mysql.cj.jdbc.Driver");
-        return DriverManager.getConnection("jdbc:mysql://localhost:3307/prod?serverTimezone=UTC", "root", "password");
+        return DriverManager.getConnection("jdbc:mysql://localhost:3307/prod?serverTimezone=UTC",
+                "root", "password");
     }
 
+    @Override
     public void closeResultSet(ResultSet rs) {
         if (rs != null) {
             try {
