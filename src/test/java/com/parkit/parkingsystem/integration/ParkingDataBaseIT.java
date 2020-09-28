@@ -6,7 +6,6 @@ import com.parkit.parkingsystem.constants.DiscountType;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.ParkingSpotDAOImpl;
 import com.parkit.parkingsystem.dao.TicketDAOImpl;
-import com.parkit.parkingsystem.exception.UnsuccessfulOperationException;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.FareCalculatorServiceImpl;
 import com.parkit.parkingsystem.service.contracts.FareCalculatorService;
@@ -26,7 +25,6 @@ import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 public class ParkingDataBaseIT {
@@ -56,7 +54,7 @@ public class ParkingDataBaseIT {
     private void setUpPerTest() {
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
-        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.NO_DISCOUNT).build();
+        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.P_NO_DISCOUNT).build();
     }
 
     @AfterEach
@@ -94,7 +92,7 @@ public class ParkingDataBaseIT {
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
-        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.NO_DISCOUNT).build();
+        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.P_NO_DISCOUNT).build();
         parkingCar_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
 
@@ -131,7 +129,7 @@ public class ParkingDataBaseIT {
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
-        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.NO_DISCOUNT).build();
+        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.P_NO_DISCOUNT).build();
         parkingBike_Should_CreateATicketAndUpdateParkingAvailability_When_CorrectParametersPassed();
         when(timeUtil.getTimeInSeconds()).thenReturn(LocalDateTime.now().toEpochSecond(ZoneOffset.UTC));
 
@@ -179,7 +177,7 @@ public class ParkingDataBaseIT {
     public void exitingCar_Should_CreateAPriceEqualsZeroAndOutTime_When_TimeInParkingLessThan30minAndDiscountType30MinFree() {
 
         //arrange
-        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.FREE_30_MIN).build();
+        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.P_FREE_30_MIN).build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
@@ -199,7 +197,7 @@ public class ParkingDataBaseIT {
     public void exitingCar_Should_CreateAPriceGreaterThanZeroAndOutTime_When_TimeInParkingMoreThan30minAndDiscountType30MinFree() {
 
         //arrange
-        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.FREE_30_MIN).build();
+        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.P_FREE_30_MIN).build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
@@ -236,7 +234,7 @@ public class ParkingDataBaseIT {
     public void exitingBike_Should_CreateAPriceEqualsZeroAndOutTime_When_TimeInParkingLessThan30minAndDiscountType30MinFree() {
 
         //arrange
-        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.FREE_30_MIN).build();
+        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.P_FREE_30_MIN).build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
@@ -256,7 +254,7 @@ public class ParkingDataBaseIT {
     public void exitingBike_Should_CreateAPriceGreaterThanZeroAndOutTime_When_TimeInParkingMoreThan30minAndDiscountType30MinFree() {
 
         //arrange
-        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.FREE_30_MIN).build();
+        fareCalculatorService = new FareCalculatorServiceImpl.Builder(DiscountType.P_FREE_30_MIN).build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
@@ -277,8 +275,8 @@ public class ParkingDataBaseIT {
 
         //arrange
         fareCalculatorService = new FareCalculatorServiceImpl
-                .Builder(DiscountType.FREE_30_MIN)
-                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .Builder(DiscountType.P_FREE_30_MIN)
+                .withDiscountType(DiscountType.S_RECURRING_USERS_5PERCENT)
                 .build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
@@ -300,8 +298,8 @@ public class ParkingDataBaseIT {
 
         //arrange
         fareCalculatorService = new FareCalculatorServiceImpl
-                .Builder(DiscountType.FREE_30_MIN)
-                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .Builder(DiscountType.P_FREE_30_MIN)
+                .withDiscountType(DiscountType.S_RECURRING_USERS_5PERCENT)
                 .build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
@@ -323,8 +321,8 @@ public class ParkingDataBaseIT {
 
         //arrange
         fareCalculatorService = new FareCalculatorServiceImpl
-                .Builder(DiscountType.FREE_30_MIN)
-                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .Builder(DiscountType.P_FREE_30_MIN)
+                .withDiscountType(DiscountType.S_RECURRING_USERS_5PERCENT)
                 .build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
@@ -346,8 +344,8 @@ public class ParkingDataBaseIT {
 
         //arrange
         fareCalculatorService = new FareCalculatorServiceImpl
-                .Builder(DiscountType.FREE_30_MIN)
-                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .Builder(DiscountType.P_FREE_30_MIN)
+                .withDiscountType(DiscountType.S_RECURRING_USERS_5PERCENT)
                 .build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
@@ -370,8 +368,8 @@ public class ParkingDataBaseIT {
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         fareCalculatorService = new FareCalculatorServiceImpl
-                .Builder(DiscountType.NO_DISCOUNT)
-                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .Builder(DiscountType.P_NO_DISCOUNT)
+                .withDiscountType(DiscountType.S_RECURRING_USERS_5PERCENT)
                 .build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);
@@ -393,8 +391,8 @@ public class ParkingDataBaseIT {
         //arrange
         when(inputReaderUtil.readVehicleRegistrationNumber()).thenReturn("ABCDEF");
         fareCalculatorService = new FareCalculatorServiceImpl
-                .Builder(DiscountType.NO_DISCOUNT)
-                .withDiscountType(DiscountType.RECURRING_USERS_5PERCENT)
+                .Builder(DiscountType.P_NO_DISCOUNT)
+                .withDiscountType(DiscountType.S_RECURRING_USERS_5PERCENT)
                 .build();
         parkingService = new ParkingServiceImpl(inputReaderUtil, parkingSpotDAO, ticketDAO, timeUtil
                 , fareCalculatorService);

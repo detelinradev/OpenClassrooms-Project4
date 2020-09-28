@@ -3,7 +3,6 @@ package com.parkit.parkingsystem.service;
 import com.parkit.parkingsystem.constants.ParkingType;
 import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
 import com.parkit.parkingsystem.dao.contracts.TicketDAO;
-import com.parkit.parkingsystem.exception.UnsuccessfulOperationException;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import com.parkit.parkingsystem.model.Ticket;
 import com.parkit.parkingsystem.service.contracts.FareCalculatorService;
@@ -130,7 +129,7 @@ public class ParkingServiceImpl implements ParkingService {
         int input = inputReaderUtil.readSelection();
 
         return Arrays.stream(ParkingType.values())
-                .filter(parkingType -> parkingType.getNum() == input)
+                .filter(parkingType -> parkingType.getType() == input)
                 .findFirst()
                 .orElseThrow(() -> {
                     System.out.println("Incorrect input provided");

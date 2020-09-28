@@ -29,7 +29,7 @@ public class InteractiveShellTests {
 
     @InjectMocks
     private final InteractiveShellImpl interactiveShell = new InteractiveShellImpl(new FareCalculatorServiceImpl
-            .Builder(DiscountType.NO_DISCOUNT)
+            .Builder(DiscountType.P_NO_DISCOUNT)
             .build());
 
     @Test

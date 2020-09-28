@@ -27,7 +27,7 @@ public class FareCalculatorServiceTests {
 
     @InjectMocks
     private final FareCalculatorServiceImpl fareCalculatorService = new FareCalculatorServiceImpl
-            .Builder(DiscountType.NO_DISCOUNT)
+            .Builder(DiscountType.P_NO_DISCOUNT)
             .build();
 
     @Mock
