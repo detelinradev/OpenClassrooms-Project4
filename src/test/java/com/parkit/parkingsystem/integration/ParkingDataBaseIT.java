@@ -154,7 +154,7 @@ public class ParkingDataBaseIT {
         parkingService.processIncomingVehicle();
 
         //assert
-        Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.getTicket("ABCDEF"));
+        Assertions.assertEquals(Ticket.NOT_FOUND,ticketDAO.getTicket("ABCDEF"));
 
     }
 

@@ -2,6 +2,9 @@ package com.parkit.parkingsystem.model;
 
 
 public class Ticket {
+
+	public static final Ticket NOT_FOUND = new Ticket();
+
 	private int id;
 	private ParkingSpot parkingSpot;
 	private String vehicleRegNumber;

@@ -30,8 +30,8 @@ public class InteractiveShellImpl implements InteractiveShell {
 
 
     /**
-     * Stores FareCalculatorService variable passed as parameter and creates
-     * instance of InteractiveShellImpl.
+     * Stores <code>FareCalculatorService</code> variable passed as parameter and creates
+     * instance of <code>InteractiveShellImpl</code>.
      *
      * @param fareCalculatorService dependency variable presenting  price
      *                             calculating function of the app

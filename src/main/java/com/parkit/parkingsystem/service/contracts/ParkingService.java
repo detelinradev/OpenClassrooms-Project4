@@ -7,13 +7,13 @@ import com.parkit.parkingsystem.model.ParkingSpot;
  * vehicle are performed with interaction between user input, business
  * related logic and database operations.
  * <p>
- *     Consists of a methods <class>processIncomingVehicle</class>,
- * <class>processExitingVehicle</class> and <class>getNextParkingNumberIfAvailable</class>
+ *     Consists of a methods <code>processIncomingVehicle</code>,
+ * <code>processExitingVehicle</code> and <code>getNextParkingNumberIfAvailable</code>
  * where vehicle is processed as incoming or outgoing and supportive messages
  * are printed to the console.
  * <p>
- *     Holds <class>FareCalculatorService</class>, <class>InputReaderUtil</class>,
- * <class>ParkingSpotDAO</class>, <class>TicketDAO</class> and <class>TimeUtil</class>
+ *     Holds <code>FareCalculatorService</code>, <code>InputReaderUtil</code>,
+ * <code>ParkingSpotDAO</code>, <code>TicketDAO</code> and <code>TimeUtil</code>
  * variables which are used to create dependencies through constructor injection
  * with different parts of the app in order to apply various operations.
  *
@@ -35,7 +35,7 @@ public interface ParkingService {
      /**
       *     Acquires a valid parking spot for incoming vehicle, through passing
       * the type of the vehicle to the database and wait for positive response
-      * if spot is available. In that case <class>ParkingSpot</class> is created
+      * if spot is available. In that case <code>ParkingSpot</code> is created
       * with the acquired number of the free parking spot, vehicle type and
       * boolean parameter indicating availability (initially true) and returned
       * to the invoking method. In case response is negative returns flag static
@@ -45,7 +45,7 @@ public interface ParkingService {
       *  the sole reason of implementing @Spy function when testing as the
       *  project is focused on testing an application.
       *
-      * @return <class>ParkingSpot</class> instance, when no available places
+      * @return <code>ParkingSpot</code> instance, when no available places
       * exist, returns flag static instance NOT_AVAILABLE, never null
       */
      ParkingSpot getNextParkingNumberIfAvailable();

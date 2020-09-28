@@ -14,15 +14,15 @@ import java.util.Set;
  * <p>
  *     Consists of a method calculateFare where ticket price is calculated based
  * on data in discounts and recurringUsers collections, and methods getDiscounts
- * and getRecurringUsers which returns <class>List</class> with discounts and
- * <class>Set</class> with recurring users.
+ * and getRecurringUsers which returns <code>List</code> with discounts and
+ * <code>Set</code> with recurring users.
  * <p>
  *     Follows Builder pattern, has private constructor with parameter Builder
  * which is nested static class in this class and has public method
- * <class>build</class> that returns instance of this class. Builder itself
- * takes as parameter in its constructor enum <class>DiscountType</class> and
- * can add arbitrary count of other <class>DiscountType</class> enums through
- * public method <class>withDiscountType</class>.
+ * <code>build</code> that returns instance of this class. Builder itself
+ * takes as parameter in its constructor enum <code>DiscountType</code> and
+ * can add arbitrary count of other <code>DiscountType</code> enums through
+ * public method <code>withDiscountType</code>.
  * <p>
  *     Following Builder pattern this class is able to build instances with
  * varying discount politics, if more than one, they are applied consecutively
@@ -34,7 +34,7 @@ import java.util.Set;
 public interface FareCalculatorService {
 
     /**
-     *     Calculates price and updating it in the passed <class>Ticket</class>
+     *     Calculates price and updating it in the passed <code>Ticket</code>
      * object. Ticket price is calculated based on data in discounts and
      * recurringUsers collections and the duration of stay in the parking.
      * <p>
@@ -45,37 +45,37 @@ public interface FareCalculatorService {
      * <p>
      *     Handles adding new users to the set with recurring users.
      * <p>
-     *     Performing checks over validity of <class>inTime</class> and
-     * <class>outTime</class> fields of the passed <class>Ticket</class> object.
-     * <class>Ticket</class> should have positive <class>OutTime</class> and
-     * <class>inTime</class> less than <class>OutTime</class>.
+     *     Performing checks over validity of <code>inTime</code> and
+     * <code>outTime</code> fields of the passed <code>Ticket</code> object.
+     * <code>Ticket</code> should have positive <code>OutTime</code> and
+     * <code>inTime</code> less than <code>OutTime</code>.
      *
-     * @param ticket  instance of <class>Ticket</class> holding data for current
+     * @param ticket  instance of <code>Ticket</code> holding data for current
      *                vehicle, not null
-     * @param discounts <class>List</class> with <class>DiscountType</class>
+     * @param discounts <code>List</code> with <code>DiscountType</code>
      *                 objects, holding the active discounts for the
      *                 application, may be null, but in that case price remains
      *                 0.0 for any duration of stay
-     * @param recurringUsers <class>Set</class> with recurring vehicles
+     * @param recurringUsers <code>Set</code> with recurring vehicles
      *                       registration numbers, not null
      */
     void calculateFare(Ticket ticket, List<DiscountType> discounts, Set<String> recurringUsers);
 
     /**
-     *     Returns <class>List</class> with instances of enum
-     * <class>DiscountType</class>. List is never empty or null, always has at
-     * least one instance of <class>DiscountType</class> enum.
+     *     Returns <code>List</code> with instances of enum
+     * <code>DiscountType</code>. List is never empty or null, always has at
+     * least one instance of <code>DiscountType</code> enum.
      *
-     * @return the list with instances of enum <class>DiscountType</class>,
+     * @return the list with instances of enum <code>DiscountType</code>,
      * never null
      */
     List<DiscountType> getDiscounts();
 
     /**
-     *     Returns <class>Set</class> with registered in the database vehicle
+     *     Returns <code>Set</code> with registered in the database vehicle
      * registration numbers. Never null, could be empty.
      *
-     * @return the <class>Set</class> with registered in the database vehicle
+     * @return the <code>Set</code> with registered in the database vehicle
      * registration numbers, never null
      */
     Set<String> getRecurringUsers();

@@ -31,10 +31,10 @@ public class ParkingServiceImpl implements ParkingService {
     private final FareCalculatorService fareCalculatorService;
 
     /**
-     *     Stores <class>FareCalculatorService</class>, <class>InputReaderUtil</class>,
-     * <class>ParkingSpotDAO</class>, <class>TicketDAO</class> and
-     * <class>TimeUtil</class> variables passed as parameters and creates instance of
-     * <class>ParkingServiceImpl</class>
+     *     Stores <code>FareCalculatorService</code>, <code>InputReaderUtil</code>,
+     * <code>ParkingSpotDAO</code>, <code>TicketDAO</code> and
+     * <code>TimeUtil</code> variables passed as parameters and creates instance of
+     * <code>ParkingServiceImpl</code>
      *
      * @param fareCalculatorService dependency variable presenting  price
      *                             calculating function of the app
@@ -145,25 +145,30 @@ public class ParkingServiceImpl implements ParkingService {
 
             Ticket ticket = ticketDAO.getTicket(vehicleRegNumber);
 
-            ticket.setOutTime(timeUtil.getTimeInSeconds());
+            if(!ticket.equals(Ticket.NOT_FOUND)) {
 
-            fareCalculatorService.calculateFare(ticket, fareCalculatorService.getDiscounts(),
-                    fareCalculatorService.getRecurringUsers());
+                ticket.setOutTime(timeUtil.getTimeInSeconds());
 
-            ticketDAO.updateTicket(ticket);
+                fareCalculatorService.calculateFare(ticket, fareCalculatorService.getDiscounts(),
+                        fareCalculatorService.getRecurringUsers());
 
-            ParkingSpot parkingSpot = ticket.getParkingSpot();
+                ticketDAO.updateTicket(ticket);
 
-            parkingSpot.setAvailable(true);
+                ParkingSpot parkingSpot = ticket.getParkingSpot();
 
-            parkingSpotDAO.updateParking(parkingSpot);
+                parkingSpot.setAvailable(true);
 
-            DecimalFormat df = new DecimalFormat("#.##");
+                parkingSpotDAO.updateParking(parkingSpot);
 
-            System.out.println("Please pay the parking fare: " + df.format(ticket.getPrice()) + "€");
-            System.out.println("Recorded out-time for vehicle number: " + ticket.getVehicleRegNumber() + " is: "
-                    + LocalDateTime.ofEpochSecond(ticket.getOutTime(), 0, ZoneOffset.UTC)
-                    .format(dateTimeFormatter));
+                DecimalFormat df = new DecimalFormat("#.##");
+
+                System.out.println("Please pay the parking fare: " + df.format(ticket.getPrice()) + "€");
+                System.out.println("Recorded out-time for vehicle number: " + ticket.getVehicleRegNumber() + " is: "
+                        + LocalDateTime.ofEpochSecond(ticket.getOutTime(), 0, ZoneOffset.UTC)
+                        .format(dateTimeFormatter));
+            }else{
+                System.out.println("Error fetching ticket from DB. Registration number is not registered.");
+            }
 
         } catch (RuntimeException e) {
 

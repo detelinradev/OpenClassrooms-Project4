@@ -121,7 +121,7 @@ public class TicketDAOTests {
         }
 
         @Test
-        public void save_Ticket_Should_NotSaveTicket_When_ExecuteDoNotReturnResultSet() throws SQLException, ClassNotFoundException {
+        public void save_Ticket_Should_NotSaveTicket_When_ExecuteUpdateReturnZeroRows() throws SQLException, ClassNotFoundException {
 
             //arrange
             when(dataBaseConfig.getConnection()).thenReturn(connection);
@@ -137,7 +137,7 @@ public class TicketDAOTests {
         }
 
         @Test
-        public void save_Ticket_Should_ThrowException_When_ExecuteThrowException() throws SQLException, ClassNotFoundException {
+        public void save_Ticket_Should_ThrowException_When_ExecuteUpdateThrowException() throws SQLException, ClassNotFoundException {
 
             //arrange
             when(dataBaseConfig.getConnection()).thenReturn(connection);
@@ -177,7 +177,6 @@ public class TicketDAOTests {
 
             //act
             Ticket ticketNew = ticketDAO.getTicket("ABCDEF");
-//                    .orElseThrow(IllegalArgumentException::new);
 
             //assert
             Assertions.assertEquals(ticket.getId(), ticketNew.getId());
@@ -211,7 +210,7 @@ public class TicketDAOTests {
         }
 
         @Test
-        public void get_Ticket_Should_ThrowException_When_ExecuteQueryDoNotReturnResultSet()
+        public void get_Ticket_Should_ThrowException_When_ExecuteQueryThrowException()
                 throws SQLException, ClassNotFoundException {
 
             //arrange
@@ -271,7 +270,7 @@ public class TicketDAOTests {
         }
 
         @Test
-        public void get_Ticket_Should_ReturnNull_When_ResultSetNextThrowException()
+        public void get_Ticket_Should_ReturnTicketNOT_FOUND_When_ResultSetNextReturnFalse()
                 throws SQLException, ClassNotFoundException {
 
             //arrange
@@ -281,7 +280,7 @@ public class TicketDAOTests {
             when(resultSet.next()).thenReturn(false);
 
             //act & assert
-            Assertions.assertThrows(UnsuccessfulOperationException.class, () -> ticketDAO.getTicket("ABCDEF"));
+            Assertions.assertEquals(Ticket.NOT_FOUND, ticketDAO.getTicket("ABCDEF"));
             verify(dataBaseConfig, times(1)).getConnection();
             verify(dataBaseConfig, times(1)).closeResultSet(resultSet);
             verify(connection, times(1)).prepareStatement(DBConstants.GET_TICKET);
@@ -343,7 +342,7 @@ public class TicketDAOTests {
         }
 
         @Test
-        public void update_Ticket_Should_NotUpdateTicket_When_ExecuteDoNotReturnResultSet() throws SQLException, ClassNotFoundException {
+        public void update_Ticket_Should_NotUpdateTicket_When_ExecuteUpdateReturnZeroRows() throws SQLException, ClassNotFoundException {
 
             //arrange
             when(dataBaseConfig.getConnection()).thenReturn(connection);
@@ -359,7 +358,7 @@ public class TicketDAOTests {
         }
 
         @Test
-        public void update_Ticket_Should_ThrowException_When_ExecuteThrowException() throws SQLException, ClassNotFoundException {
+        public void update_Ticket_Should_ThrowException_When_ExecuteUpdateThrowException() throws SQLException, ClassNotFoundException {
 
             //arrange
             when(dataBaseConfig.getConnection()).thenReturn(connection);

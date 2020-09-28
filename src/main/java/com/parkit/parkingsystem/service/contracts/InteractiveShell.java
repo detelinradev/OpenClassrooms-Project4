@@ -6,7 +6,7 @@ package com.parkit.parkingsystem.service.contracts;
  *     Consists of a method loadInterface where the main menu is loaded
  * and user can make choice of several actions.
  * <p>
- *     Holds FareCalculatorService variable what is used to create
+ *     Holds <code>FareCalculatorService</code> variable what is used to create
  * dependency through constructor injection with price calculating function
  * of the app in order to apply various discounts at runtime.
  * <p>
