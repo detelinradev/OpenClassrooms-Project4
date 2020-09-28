@@ -47,26 +47,6 @@ public class ParkingSpotTests {
     }
 
     @Test
-    public void set_Id_Should_SetId(){
-
-        //act
-        parkingSpot.setId(2);
-
-        //assert
-        Assertions.assertEquals(2,parkingSpot.getId());
-    }
-
-    @Test
-    public void set_ParkingType_Should_SetParkingType(){
-
-        //act
-        parkingSpot.setParkingType(ParkingType.BIKE);
-
-        //assert
-        Assertions.assertEquals(ParkingType.BIKE,parkingSpot.getParkingType());
-    }
-
-    @Test
     public void set_IsAvailable_Should_SetIsAvailable(){
 
         //act
