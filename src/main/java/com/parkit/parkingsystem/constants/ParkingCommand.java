@@ -87,7 +87,7 @@ public enum ParkingCommand {
      *                        allowing methods of <code>ParkingService</code>
      *                        class to be executed in this method
      * @return <code>boolean</code> variable that indicates if the
-     * <code>enum</code> <code>ParkingService>EXIT_APP</code> was chosen
+     * <code>enum</code> <code>ParkingService.EXIT_APP</code> was chosen
      */
     public abstract boolean execute(ParkingService parkingService);
 }

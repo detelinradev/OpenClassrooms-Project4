@@ -19,7 +19,7 @@ public class DBConstants {
     public static final String UPDATE_PARKING_SPOT = "update parking set available = ? where PARKING_NUMBER = ?";
 
     /**
-     * Creating in database table ticket record for passed <codeTicket></code>
+     * Creating in database table ticket record for passed <code>Ticket</code>
      * object
      */
     public static final String SAVE_TICKET = "insert into ticket(PARKING_NUMBER, VEHICLE_REG_NUMBER, PRICE," +
@@ -32,7 +32,7 @@ public class DBConstants {
     public static final String UPDATE_TICKET = "update ticket set PRICE=?, OUT_TIME=? where ID=?";
 
     /**
-     * Retrieves from database table ticket record for <code>Ticket</code>> with passed
+     * Retrieves from database table ticket record for <code>Ticket</code> with passed
      * registration number
      */
     public static final String GET_TICKET = "select t.PARKING_NUMBER, t.ID, t.PRICE, t.IN_TIME, t.OUT_TIME," +

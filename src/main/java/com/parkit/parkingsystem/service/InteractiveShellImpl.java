@@ -13,14 +13,14 @@ import com.parkit.parkingsystem.util.InputReaderUtilImpl;
 import com.parkit.parkingsystem.util.TimeUtilImpl;
 import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
 import com.parkit.parkingsystem.util.contracts.TimeUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
 public class InteractiveShellImpl implements InteractiveShell {
 
-    private static final Logger logger = LogManager.getLogger("InteractiveShell");
+    private static final Logger logger = LoggerFactory.getLogger("InteractiveShell");
 
     private InputReaderUtil inputReaderUtil = new InputReaderUtilImpl();
     private ParkingSpotDAO parkingSpotDAO = new ParkingSpotDAOImpl(new DataBaseConfigImpl());

@@ -7,8 +7,8 @@ import com.parkit.parkingsystem.dao.contracts.ParkingSpotDAO;
 import com.parkit.parkingsystem.exception.UnsuccessfulOperationException;
 import com.parkit.parkingsystem.model.ParkingSpot;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,7 +18,7 @@ import java.sql.SQLException;
 
 public class ParkingSpotDAOImpl implements ParkingSpotDAO {
 
-    private static final Logger logger = LogManager.getLogger("ParkingSpotDAO");
+    private static final Logger logger = LoggerFactory.getLogger("ParkingSpotDAO");
 
     public final DataBaseConfig dataBaseConfig;
 

@@ -9,8 +9,8 @@ import com.parkit.parkingsystem.service.contracts.FareCalculatorService;
 import com.parkit.parkingsystem.service.contracts.ParkingService;
 import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
 import com.parkit.parkingsystem.util.contracts.TimeUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DecimalFormat;
 import java.time.LocalDateTime;
@@ -20,7 +20,7 @@ import java.util.Arrays;
 
 public class ParkingServiceImpl implements ParkingService {
 
-    private static final Logger logger = LogManager.getLogger("ParkingService");
+    private static final Logger logger = LoggerFactory.getLogger("ParkingService");
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("HH:mm d.MMMM.yyyy");
 
     private final InputReaderUtil inputReaderUtil;

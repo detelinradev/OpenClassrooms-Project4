@@ -16,13 +16,13 @@ package com.parkit.parkingsystem.constants;
 public enum DiscountType {
     P_NO_DISCOUNT {
         @Override
-        public double calculatePrice(double price, long durationMinutes, double vehicleRatePerHour, boolean isRecurringUser) {
+        public double calculatePrice(double price, long durationMinutes, double vehicleRatePerHour, boolean discountFlag) {
 
             return durationMinutes * vehicleRatePerHour / 60;
         }
     }, P_FREE_30_MIN {
         @Override
-        public double calculatePrice(double price, long durationMinutes, double vehicleRatePerHour, boolean isRecurringUser) {
+        public double calculatePrice(double price, long durationMinutes, double vehicleRatePerHour, boolean discountFlag) {
 
             if (durationMinutes <= 30) return 0;
 
@@ -30,9 +30,9 @@ public enum DiscountType {
         }
     }, S_RECURRING_USERS_5PERCENT {
         @Override
-        public double calculatePrice(double price, long durationMinutes, double vehicleRatePerHour, boolean isRecurringUser) {
+        public double calculatePrice(double price, long durationMinutes, double vehicleRatePerHour, boolean discountFlag) {
 
-            if (isRecurringUser) {
+            if (discountFlag) {
                 price = price * 0.95;
             }
             return price;
@@ -51,9 +51,9 @@ public enum DiscountType {
      *                       is less then a minute
      * @param vehicleRatePerHour  predefined rate for vehicle per hour as
      *                           <code>double</code> value
-     * @param isRecurringUser  <code>boolean</code> variable indicating
+     * @param discountFlag  <code>boolean</code> variable indicating
      *                         if user is recurring
      * @return the price as <code>double</code> value, could be 0
      */
-    public abstract double calculatePrice(double price, long durationMinutes, double vehicleRatePerHour, boolean isRecurringUser);
+    public abstract double calculatePrice(double price, long durationMinutes, double vehicleRatePerHour, boolean discountFlag);
 }

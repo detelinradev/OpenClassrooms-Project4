@@ -2,17 +2,16 @@ package com.parkit.parkingsystem.util;
 
 import com.parkit.parkingsystem.exception.UnsuccessfulOperationException;
 import com.parkit.parkingsystem.util.contracts.InputReaderUtil;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.nio.charset.Charset;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class InputReaderUtilImpl implements InputReaderUtil {
 
     private static final Scanner scan = new Scanner(System.in, "UTF-8");
-    private static final Logger logger = LogManager.getLogger("InputReaderUtil");
+    private static final Logger logger = LoggerFactory.getLogger("InputReaderUtil");
 
     public int readSelection() {
 

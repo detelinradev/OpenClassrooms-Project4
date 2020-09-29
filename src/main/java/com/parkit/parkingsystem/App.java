@@ -4,8 +4,9 @@ import com.parkit.parkingsystem.constants.DiscountType;
 import com.parkit.parkingsystem.service.FareCalculatorServiceImpl;
 import com.parkit.parkingsystem.service.contracts.InteractiveShell;
 import com.parkit.parkingsystem.service.InteractiveShellImpl;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  *  Encapsulates the application's main entry point.
@@ -14,7 +15,7 @@ import org.apache.logging.log4j.Logger;
  */
 public class App {
 
-    private static final Logger logger = LogManager.getLogger("App");
+    private static final Logger logger = LoggerFactory.getLogger("App");
 
     /**
      * The application's entry point.
@@ -39,10 +40,12 @@ public class App {
      */
     public static void main(String[] args){
         logger.info("Initializing Parking System");
+
         InteractiveShell interactiveShell = new InteractiveShellImpl(new FareCalculatorServiceImpl
                 .Builder(DiscountType.P_NO_DISCOUNT)
                 .withDiscountType(DiscountType.S_RECURRING_USERS_5PERCENT)
                 .build());
+
         interactiveShell.loadInterface();
     }
 }
