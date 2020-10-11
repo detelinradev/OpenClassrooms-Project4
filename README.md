@@ -1,49 +1,53 @@
+This is a fourth project for Open Classrooms - test and debug a java application.
+
 # Parking System
 A command line app for managing the parking system. 
 This app uses Java to run and stores the data in Mysql DB.
 
-## Getting Started
+Here is what the app does:
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
-
-### Prerequisites
-
-What things you need to install the software and how to install them
-
-- Java 1.8
-- Maven 3.6.2
-- Mysql 8.0.17
-
-### Installing
-
-A step by step series of examples that tell you how to get a development env running:
-
-1.Install Java:
-
-https://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.html
-
-2.Install Maven:
-
-https://maven.apache.org/install.html
-
-3.Install MySql:
-
-https://dev.mysql.com/downloads/mysql/
-
-After downloading the mysql 8 installer and installing it, you will be asked to configure the password for the default `root` account.
-This code uses the default root account to connect and the password can be set as `rootroot`. If you add another user/credentials make sure to change the same in the code base.
+When launching the app, the user is asked to select an action: 
+either enter or exit the parking garage (or exit the app).
+When the user enters, the system will ask for the type of 
+vehicle (car or bike), and the license plate number and will
+ let the user enter if a spot is available.
+  It will also tell the user where to park.
+When exiting the parking garage, the user gives his license plate again.
+ The system will then calculate and display the fee based on the parking
+  time and vehicle type, then go back to the home menu.
 
 ### Running App
 
-Post installation of MySQL, Java and Maven, you will have to set up the tables and data in the data base.
-For this, please run the sql commands present in the `Data.sql` file under the `resources` folder in the code base.
+Post installation of MySQL, Java and Maven, you will have to set up the 
+tables and data in the data base.
+For this, please run the sql commands present in the `Data.sql` file 
+under the `resources` folder in the code base.
 
-Finally, you will be ready to import the code into an IDE of your choice and run the App.java to launch the application.
+### Project Tasks
 
-### Testing
+* Add a 30-min free-parking discount feature.
+* Add a 5% discount for recurring users.
+* Correct the code so that all the unit tests pass.
+* Complete the integration tests marked by “TODO” comments.
 
-The app has unit tests and integration tests written. More of these need to be added and in some places that can be seen mentioend as `TODO` comments. The existing tests need to be triggered from maven-surefire plugin while we try to generate the final executable jar file.
+### Implementation
 
-To run the tests from maven, go to the folder that contains the pom.xml file and execute the below command.
-
-`mvn test`
+For the first phase - correcting the code and ensuring its reliability through unit testing, I used [FindBugs](https://mvnrepository.com/artifact/org.codehaus.mojo/findbugs-maven-plugin) and the debugging feature of my IDE of choice.
+After fixing the code I implemented unit tests for all public methods in `service`, `model`,
+ `dao` and `constants` packages. I used JUnit5 with [Junit Jupiter Api](https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api)
+ and [Mockito Junit Jupiter](https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter).
+ The execution report for the tests was delivered by [Surefire](https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin).
+ The goal for test coverage was 60,70% and the actual coverage is 84% what was checked with help of
+ [JaCoCo](https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin).
+ <br>I added integration tests as well between `service` and `repository` modules to make sure they work together as expected.
+ 
+ For the second phase - implementing new features, I decided to create a new `enum` `DiscountType`. Implementing options 
+ as enums and including option's functionality as abstract method each enum implements for itself is one of the better ways
+ to implement `Strategy Design Pattern`.
+ <br>I applied this pattern for all `switch` statements in the application as better approach.
+ 
+ Furthermore, I would like to be able to use more than one discount at a time. So I chose to implement a `Builder Design Pattern`
+  for the `FareCalculatorService` class. Finally, I included `FareCalculatorService` class as constructor dependency to 
+  `InteractiveShell` class which contains the method `loadInterface` that runs the application, so when a user starts 
+  application through instantiating `InteractiveShell` he is able at runtime to choose what discount strategy to use as main discount
+  and as many as he needs additional discounts.
