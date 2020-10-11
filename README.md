@@ -33,15 +33,21 @@ under the `resources` folder in the code base.
 ### Implementation
 
 For the first phase - correcting the code and ensuring its reliability through unit testing, I used [FindBugs](https://mvnrepository.com/artifact/org.codehaus.mojo/findbugs-maven-plugin) and the debugging feature of my IDE of choice.
+
 ![FindBugs](https://user-images.githubusercontent.com/39421427/95667895-e02ba280-0b74-11eb-9471-358f9a749ec1.jpg)
+
 After fixing the code I implemented unit tests for all public methods in `service`, `model`,
  `dao` and `constants` packages. I used JUnit5 with [Junit Jupiter Api](https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api)
  and [Mockito Junit Jupiter](https://mvnrepository.com/artifact/org.mockito/mockito-junit-jupiter).
  The execution report for the tests was delivered by [Surefire](https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin).
+ 
  ![Surefire](https://user-images.githubusercontent.com/39421427/95667862-92169f00-0b74-11eb-9d0a-323358048c76.jpg)
- The goal for test coverage was 60,70% and the actual coverage is 84% what was checked with help of
+ 
+ The goal for test coverage was 60,70% and the actual coverage is 83% what was checked with help of
  [JaCoCo](https://mvnrepository.com/artifact/org.jacoco/jacoco-maven-plugin).
+ 
  ![JacocoApp](https://user-images.githubusercontent.com/39421427/95667877-b1adc780-0b74-11eb-9c23-6ee24a590cf0.jpg)
+ 
  <br>I added integration tests as well between `service` and `repository` modules to make sure they work together as expected.
  
  For the second phase - implementing new features, I decided to create a new `enum` `DiscountType`. Implementing options 
